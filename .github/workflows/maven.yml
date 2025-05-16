@@ -48,14 +48,6 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
-    - name: Debug env (should be masked)
-      env:
-        XRAY_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
-        XRAY_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
-      run: |
-        echo "CLIENT_ID: $XRAY_CLIENT_ID"
-        echo "CLIENT_SECRET: $XRAY_CLIENT_SECRET"
-
     - name: Push results to Xray on Jira Cloud
       if: always()
       working-directory: projX/demo

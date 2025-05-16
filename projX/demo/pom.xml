@@ -116,18 +116,12 @@
 			<plugin>
 				<groupId>app.getxray</groupId>
 				<artifactId>xray-maven-plugin</artifactId>
-				<version>0.9.0</version>
+				<version>0.8.0</version>
 				<configuration>
 					<cloud>true</cloud>
-					<clientId>${env.XRAY_CLIENT_ID}</clientId>
-    				<clientSecret>${env.XRAY_CLIENT_SECRET}</clientSecret>
-
 					<projectKey>TQSPROJECT</projectKey>
-					<testPlanKey>TQSPROJECT-22</testPlanKey>
-					<revision>main</revision>
-					
 					<reportFormat>junit</reportFormat>
-					<reportFile>reports/TEST-junit-jupiter.xml</reportFile>
+                    <reportFile>reports/TEST-junit-jupiter.xml</reportFile>
 				</configuration>
 			</plugin>
 		</plugins>
