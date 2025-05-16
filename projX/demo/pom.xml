@@ -117,11 +117,12 @@
 					<cloud>true</cloud>
 					<projectKey>TQSPROJECT</projectKey>
 					<testPlanKey>TQSPROJECT-22</testPlanKey>
-					<testEnvironments>${env.TEST_ENVIRONMENT}</testEnvironments>
+					<testEnvironment>${env.TEST_ENVIRONMENT}</testEnvironment>
     				<revision>${env.REVISION}</revision>
-					<fixVersion>1.0</fixVersion>
+					<version>1.0</version>
 					<reportFormat>junit</reportFormat>
 					<reportFile>${project.build.directory}/surefire-reports</reportFile>
+					<verbose>true</verbose>
 				</configuration>
 			</plugin>
 		</plugins>
