@@ -115,7 +115,7 @@
 					<clientId>99360EBDA47742219C93B5A0E15E38FA</clientId>
 					<clientSecret>2c10b8c02ad2513786c58c628b3a5ecce5d960a39b743bc5cb59b51ebf26d5ac</clientSecret>
 					<cloud>true</cloud>
-					<projectKey>TQS-project</projectKey>
+					<projectKey>TQSPROJECT</projectKey>
 					<testPlanKey>TQSPROJECT-22</testPlanKey>
 					<testEnvironments>${env.TEST_ENVIRONMENT}</testEnvironments>
     				<revision>${env.REVISION}</revision>
