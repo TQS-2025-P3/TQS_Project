@@ -1,4 +1,15 @@
-name: Xray CI with Maven
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# we can build and run tests in a single step or do it in multiple steps...
+# the "package" phase on maven implicitly will download dependencies, build classes, run unit tests, and package classes
+
+name: CI with Maven
 
 on:
   push:
@@ -10,77 +21,42 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '17', '21' ]
-
+        
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
       with:
-        fetch-depth: 0
-
-    - name: Set up JDK ${{ matrix.java }}
+        fetch-depth: 0    
+    - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: maven
-
-    - name: Cache Maven Dependencies
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('projX/demo/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-
-    - name: Build Project
-      working-directory: projX/demo
-      run: mvn clean install -Djava.version=${{ matrix.java }} -DskipTests # Skip tests during initial build
-
-    - name: Run Unit Tests
-      working-directory: projX/demo
-      run: mvn test -Djava.version=${{ matrix.java }}
-
-    - name: Run Integration Tests
-      working-directory: projX/demo
-      run: mvn integration-test -Djava.version=${{ matrix.java }}
-
-    # Optional: Publish Test Reports (Generic Example)
-    - name: Publish Unit Test Reports
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: unit-test-reports-java-${{ matrix.java }}
-        path: projX/demo/target/surefire-reports
-
-    - name: Publish Integration Test Reports
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: integration-test-reports-java-${{ matrix.java }}
-        path: projX/demo/target/failsafe-reports # Assuming Failsafe plugin for integration tests
-
-    # Conditional: Add code coverage information to PR
-    - name: Generate and Upload Code Coverage Report
-      id: jacoco-report
+    - name: Build and run unit tests
+      run: mvn -B package --file pom.xml
+    - name: Run integration tests
+      run: mvn -B integration-test verify --file pom.xml
+    - name: Add code coverage information to PR
+      id: jacoco-pr
       uses: madrapps/jacoco-report@v1.7.1
       if: github.event_name == 'pull_request'
       with:
-        paths: projX/demo/target/site/jacoco-merged-test-coverage-report/jacoco.xml
+        paths: |
+          ${{ github.workspace }}/**/target/site/jacoco-merged-test-coverage-report/jacoco.xml 
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
-
-    - name: Push Results to Xray on Jira Cloud
+    - name: Push results to Xray on Jira Cloud
       if: always()
-      working-directory: projX/demo
       env:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISION: ${{ github.ref_name }}
+        REVISON: ${{ github.ref_name}}
         TEST_ENVIRONMENT: java${{ matrix.java }}
-      run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISION }} xray:import-results
+      run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} xray:import-results  
