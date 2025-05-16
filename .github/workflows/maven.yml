@@ -1,4 +1,4 @@
-name: CI with Maven
+name: Xray CI with Maven
 
 on:
   push:
@@ -10,45 +10,77 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
         java: [ '17', '21' ]
-        
+
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
       with:
-        fetch-depth: 0    
-    - name: Set up JDK
+        fetch-depth: 0
+
+    - name: Set up JDK ${{ matrix.java }}
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: maven
-    - name: Build and run unit tests
+
+    - name: Cache Maven Dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('projX/demo/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+
+    - name: Build Project
       working-directory: projX/demo
-      run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
-    - name: Run integration tests
+      run: mvn clean install -Djava.version=${{ matrix.java }} -DskipTests # Skip tests during initial build
+
+    - name: Run Unit Tests
       working-directory: projX/demo
-      run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
-    - name: Add code coverage information to PR
-      id: jacoco-pr
+      run: mvn test -Djava.version=${{ matrix.java }}
+
+    - name: Run Integration Tests
+      working-directory: projX/demo
+      run: mvn integration-test -Djava.version=${{ matrix.java }}
+
+    # Optional: Publish Test Reports (Generic Example)
+    - name: Publish Unit Test Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: unit-test-reports-java-${{ matrix.java }}
+        path: projX/demo/target/surefire-reports
+
+    - name: Publish Integration Test Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-reports-java-${{ matrix.java }}
+        path: projX/demo/target/failsafe-reports # Assuming Failsafe plugin for integration tests
+
+    # Conditional: Add code coverage information to PR
+    - name: Generate and Upload Code Coverage Report
+      id: jacoco-report
       uses: madrapps/jacoco-report@v1.7.1
       if: github.event_name == 'pull_request'
       with:
-        paths: |
-          ${{ github.workspace }}/**/target/site/jacoco-merged-test-coverage-report/jacoco.xml 
+        paths: projX/demo/target/site/jacoco-merged-test-coverage-report/jacoco.xml
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
-    - name: Push results to Xray on Jira Cloud
+
+    - name: Push Results to Xray on Jira Cloud
       if: always()
       working-directory: projX/demo
       env:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISON: ${{ github.ref_name}}
+        REVISION: ${{ github.ref_name }}
         TEST_ENVIRONMENT: java${{ matrix.java }}
-      run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISON }} xray:import-results  
+      run: mvn -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} -Dxray.testEnvironment=${{ env.TEST_ENVIRONMENT }} -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} -Dxray.revision=${{ env.REVISION }} xray:import-results
