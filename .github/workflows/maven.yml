@@ -56,7 +56,7 @@ jobs:
       working-directory: projX/demo
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar -Dsonar.projectKey=TQS-2025-P3_TQS_Project
+      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:5.1.0.4751:sonar -Dsonar.projectKey=TQS-2025-P3_TQS_Project -Dsonar.token=$SONAR_TOKEN
 
     - name: Add code coverage information to PR
       id: jacoco-pr
