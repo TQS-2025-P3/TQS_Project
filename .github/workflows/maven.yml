@@ -17,21 +17,26 @@ jobs:
         java: [ '17', '21' ]
         
     steps:
+
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0    
+        fetch-depth: 0 
+
     - name: Set up JDK
       uses: actions/setup-java@v4
       with:
         java-version: ${{ matrix.java }}
         distribution: 'temurin'
         cache: maven
+
     - name: Build and run unit tests
       working-directory: projX/demo
       run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
+
     - name: Run integration tests
       working-directory: projX/demo
       run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
+
     - name: Add code coverage information to PR
       id: jacoco-pr
       uses: madrapps/jacoco-report@v1.7.1
@@ -42,6 +47,15 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
+
+    - name: Debug env (should be masked)
+      env:
+        XRAY_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
+        XRAY_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
+      run: |
+        echo "CLIENT_ID: $XRAY_CLIENT_ID"
+        echo "CLIENT_SECRET: $XRAY_CLIENT_SECRET"
+
     - name: Push results to Xray on Jira Cloud
       if: always()
       working-directory: projX/demo
