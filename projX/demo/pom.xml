@@ -78,6 +78,32 @@
 				</configuration>
 			</plugin>
 			<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-surefire-plugin</artifactId>
+      			<version>3.0.0</version>
+      			<configuration>
+        			<reportsDirectory>${project.build.directory}</reportsDirectory>
+        			<reportNameSuffix></reportNameSuffix>
+      			</configuration>
+    		</plugin>
+			<plugin>
+      			<groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-failsafe-plugin</artifactId>
+      			<version>3.0.0</version>
+      			<configuration>
+        			<reportsDirectory>${project.build.directory}</reportsDirectory>
+        			<reportNameSuffix></reportNameSuffix>
+      			</configuration>
+      			<executions>
+        			<execution>
+          				<goals>
+            				<goal>integration-test</goal>
+            				<goal>verify</goal>
+          				</goals>
+        			</execution>
+      			</executions>
+    		</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
@@ -100,10 +126,7 @@
 					<projectKey>CALC</projectKey>
 					<fixVersion>1.0</fixVersion>
 					<reportFormat>junit</reportFormat>
-					<reportFiles>
-						<param>target/surefire-reports/TEST-*.xml</param>
-						<param>target/failsafe-reports/TEST-*.xml</param>
-					</reportFiles>
+					<reportFile>${project.build.directory}/junit.xml</reportFile>
 				</configuration>
 			</plugin>
 		</plugins>
