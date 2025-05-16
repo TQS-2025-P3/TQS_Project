@@ -100,7 +100,10 @@
 					<projectKey>CALC</projectKey>
 					<fixVersion>1.0</fixVersion>
 					<reportFormat>junit</reportFormat>
-					<reportFile>target/junit.xml</reportFile>
+					<reportFiles>
+						<param>target/surefire-reports/TEST-*.xml</param>
+						<param>target/failsafe-reports/TEST-*.xml</param>
+					</reportFiles>
 				</configuration>
 			</plugin>
 		</plugins>
