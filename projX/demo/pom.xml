@@ -89,6 +89,20 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>app.getxray</groupId>
+				<artifactId>xray-maven-plugin</artifactId>
+				<version>0.9.0</version>
+				<configuration>
+					<clientId>99360EBDA47742219C93B5A0E15E38FA</clientId>
+					<clientSecret>2c10b8c02ad2513786c58c628b3a5ecce5d960a39b743bc5cb59b51ebf26d5ac</clientSecret>
+					<cloud>true</cloud>
+					<projectKey>CALC</projectKey>
+					<fixVersion>1.0</fixVersion>
+					<reportFormat>junit</reportFormat>
+					<reportFile>target/junit.xml</reportFile>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
