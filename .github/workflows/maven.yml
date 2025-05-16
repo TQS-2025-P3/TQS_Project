@@ -28,10 +28,10 @@ jobs:
         cache: maven
     - name: Build and run unit tests
       working-directory: projX/demo
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
     - name: Run integration tests
       working-directory: projX/demo
-      run: mvn -B integration-test verify --file pom.xml
+      run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
     - name: Add code coverage information to PR
       id: jacoco-pr
       uses: madrapps/jacoco-report@v1.7.1
