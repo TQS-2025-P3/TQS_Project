@@ -118,7 +118,7 @@
 					<projectKey>CALC</projectKey>
 					<fixVersion>1.0</fixVersion>
 					<reportFormat>junit</reportFormat>
-					<reportFile>target/surefire-reports/TEST-.*\.xml</reportFile>
+					<reportFile>${project.build.directory}/surefire-reports</reportFile>
 				</configuration>
 			</plugin>
 		</plugins>
