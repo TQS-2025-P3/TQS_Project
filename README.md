@@ -7,3 +7,6 @@ Nuno- Devoloper;
 João Morais- QA Engineer;
 Gonçalo Abrantes- DevOps Master
 
+SonarQube Cloud: https://sonarcloud.io/project/overview?id=TQS-2025-P3_TQS_Project
+
+Jira: https://tqs-project-18.atlassian.net/jira/software/projects/TQSPROJECT/boards/1
