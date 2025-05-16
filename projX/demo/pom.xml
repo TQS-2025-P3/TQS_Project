@@ -61,6 +61,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>app.getxray</groupId>
+			<artifactId>xray-maven-plugin</artifactId>
+			<version>0.8.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -112,17 +117,10 @@
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.9.0</version>
 				<configuration>
-					<clientId>99360EBDA47742219C93B5A0E15E38FA</clientId>
-					<clientSecret>2c10b8c02ad2513786c58c628b3a5ecce5d960a39b743bc5cb59b51ebf26d5ac</clientSecret>
 					<cloud>true</cloud>
 					<projectKey>TQSPROJECT</projectKey>
-					<testPlanKey>TQSPROJECT-22</testPlanKey>
-					<testEnvironment>${env.TEST_ENVIRONMENT}</testEnvironment>
-    				<revision>${env.REVISION}</revision>
-					<version>1.0</version>
 					<reportFormat>junit</reportFormat>
-					<reportFile>${project.build.directory}/surefire-reports</reportFile>
-					<verbose>true</verbose>
+					<reportFile>reports/TEST-junit-jupiter.xml</reportFile>
 				</configuration>
 			</plugin>
 		</plugins>
