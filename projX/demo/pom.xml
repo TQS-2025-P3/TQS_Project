@@ -67,11 +67,6 @@
 			<version>0.7.3</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>app.getxray</groupId>
-			<artifactId>xray-maven-plugin</artifactId>
-			<version>0.8.0</version>
-		</dependency>
 	</dependencies>
 
 	<build>
@@ -124,7 +119,13 @@
 				<version>0.9.0</version>
 				<configuration>
 					<cloud>true</cloud>
+					<clientId>${env.XRAY_CLIENT_ID}</clientId>
+    				<clientSecret>${env.XRAY_CLIENT_SECRET}</clientSecret>
+
 					<projectKey>TQSPROJECT</projectKey>
+					<testPlanKey>TQSPROJECT-22</testPlanKey>
+					<revision>main</revision>
+					
 					<reportFormat>junit</reportFormat>
 					<reportFile>reports/TEST-junit-jupiter.xml</reportFile>
 				</configuration>
