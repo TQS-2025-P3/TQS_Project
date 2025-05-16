@@ -42,7 +42,7 @@ jobs:
         min-coverage-changed-files: 80
     - name: Push results to Xray on Jira Cloud
       if: always()
-      working_directory: projX/demo
+      working-directory: projX/demo
       env:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
