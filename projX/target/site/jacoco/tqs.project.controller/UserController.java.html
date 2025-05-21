@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project</a> &gt; <a href="index.source.html" class="el_package">tqs.project.controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package tqs.project.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import tqs.project.model.User;
+import tqs.project.service.UserService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(&quot;/api/users&quot;)
+@CrossOrigin(origins = &quot;http://localhost:5173&quot;)
+<span class="fc" id="L13">public class UserController {</span>
+
+    @Autowired
+    private UserService userService;
+
+    @GetMapping
+    public List&lt;User&gt; getAllUsers() {
+<span class="nc" id="L20">        return userService.getAllUsers();</span>
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+<span class="nc" id="L25">        return userService.createUser(user);</span>
+    }
+
+    @GetMapping(&quot;/{id}&quot;)
+    public User getUserById(@PathVariable Long id) {
+<span class="nc" id="L30">        return userService.getUserById(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
