@@ -2,8 +2,8 @@
 O objetivo do nosso projeto é desenvolver uma aplicação que permite um utilizador encontrar estações de carregamento de veículos eletrónicos ou híbridos, reservar tais estações por um periodo de tempo e fazer pagamento so serviço de forma simples
 
 Team & Roles:
-Pedro Rei- Product owner & Team Cordinator;
-Nuno- Devoloper;
+Pedro Rei- Team Cordinator;
+Nuno- Product Owner;
 João Morais- QA Engineer;
 Gonçalo Abrantes- DevOps Master
 
