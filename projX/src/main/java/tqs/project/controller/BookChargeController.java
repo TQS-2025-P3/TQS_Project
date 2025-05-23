@@ -1,7 +1,9 @@
 package tqs.project.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tqs.project.dto.BookChargeDTO;
 import tqs.project.model.BookCharge;
 import tqs.project.service.BookChargeService;
 
@@ -21,7 +23,7 @@ public class BookChargeController {
     }
 
     @PostMapping
-    public BookCharge createBooking(@RequestBody BookCharge booking) {
-        return bookingService.createBooking(booking);
+    public BookCharge createBooking(@Valid @RequestBody BookChargeDTO bookingDTO) {
+        return bookingService.createBooking(bookingDTO);
     }
 }

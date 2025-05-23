@@ -1,7 +1,9 @@
 package tqs.project.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tqs.project.dto.CarDTO;
 import tqs.project.model.Car;
 import tqs.project.service.CarService;
 
@@ -21,8 +23,8 @@ public class CarController {
     }
 
     @PostMapping
-    public Car createCar(@RequestBody Car car) {
-        return carService.addCar(car);
+    public Car createCar(@Valid @RequestBody CarDTO carDTO) {
+        return carService.addCar(carDTO);
     }
 
     @GetMapping("/{id}")

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalExceptionHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project</a> &gt; <a href="index.source.html" class="el_package">tqs.project.exception</a> &gt; <span class="el_source">GlobalExceptionHandler.java</span></div><h1>GlobalExceptionHandler.java</h1><pre class="source lang-java linenums">package tqs.project.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+<span class="fc" id="L16">public class GlobalExceptionHandler {</span>
+
+    // Tratamento para erros de validação (ex: @Valid)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleValidationErrors(MethodArgumentNotValidException ex) {
+<span class="fc" id="L21">        Map&lt;String, Object&gt; errors = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L22">        Map&lt;String, String&gt; validationErrors = new HashMap&lt;&gt;();</span>
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        for (FieldError error : ex.getBindingResult().getFieldErrors()) {</span>
+<span class="fc" id="L25">            validationErrors.put(error.getField(), error.getDefaultMessage());</span>
+<span class="fc" id="L26">        }</span>
+
+<span class="fc" id="L28">        errors.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="fc" id="L29">        errors.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());</span>
+<span class="fc" id="L30">        errors.put(&quot;errors&quot;, validationErrors);</span>
+
+<span class="fc" id="L32">        return new ResponseEntity&lt;&gt;(errors, HttpStatus.BAD_REQUEST);</span>
+    }
+
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleIllegalArgument(IllegalArgumentException ex) {
+<span class="nc" id="L38">    Map&lt;String, Object&gt; error = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L39">    error.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L40">    error.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());</span>
+<span class="nc" id="L41">    error.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L42">    error.put(&quot;message&quot;, ex.getMessage());</span>
+
+<span class="nc" id="L44">    return new ResponseEntity&lt;&gt;(error, HttpStatus.BAD_REQUEST);</span>
+}
+
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity&lt;Map&lt;String, Object&gt;&gt; handleResourceNotFound(ResourceNotFoundException ex) {
+<span class="nc" id="L50">    Map&lt;String, Object&gt; error = new HashMap&lt;&gt;();</span>
+<span class="nc" id="L51">    error.put(&quot;timestamp&quot;, LocalDateTime.now());</span>
+<span class="nc" id="L52">    error.put(&quot;status&quot;, HttpStatus.BAD_REQUEST.value());</span>
+<span class="nc" id="L53">    error.put(&quot;error&quot;, &quot;Bad Request&quot;);</span>
+<span class="nc" id="L54">    error.put(&quot;message&quot;, ex.getMessage());</span>
+
+<span class="nc" id="L56">    return new ResponseEntity&lt;&gt;(error, HttpStatus.BAD_REQUEST);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

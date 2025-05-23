@@ -2,23 +2,38 @@
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.project.dto.ChargerStationDTO;
 import tqs.project.model.ChargerStation;
+import tqs.project.model.Staff;
 import tqs.project.repository.ChargerStationRepository;
+import tqs.project.repository.StaffRepository;
 
 import java.util.List;
 
 @Service
-<span class="fc" id="L11">public class ChargerStationService {</span>
+<span class="fc" id="L14">public class ChargerStationService {</span>
 
     @Autowired
     private ChargerStationRepository stationRepository;
 
+    @Autowired
+    private StaffRepository staffRepository;
+
     public List&lt;ChargerStation&gt; getAllStations() {
-<span class="nc" id="L17">        return stationRepository.findAll();</span>
+<span class="nc" id="L23">        return stationRepository.findAll();</span>
     }
 
-    public ChargerStation createStation(ChargerStation station) {
-<span class="nc" id="L21">        return stationRepository.save(station);</span>
+    public ChargerStation createStation(ChargerStationDTO dto) {
+<span class="nc" id="L27">        Staff staff = staffRepository.findById(dto.getStaffId()).orElseThrow(() -&gt;</span>
+<span class="nc" id="L28">            new IllegalArgumentException(&quot;Staff com ID &quot; + dto.getStaffId() + &quot; não existe.&quot;)</span>
+        );
+
+<span class="nc" id="L31">        ChargerStation station = new ChargerStation();</span>
+<span class="nc" id="L32">        station.setName(dto.getName());</span>
+<span class="nc" id="L33">        station.setLocation(dto.getLocation());</span>
+<span class="nc" id="L34">        station.setStaff(staff);</span>
+
+<span class="nc" id="L36">        return stationRepository.save(station);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

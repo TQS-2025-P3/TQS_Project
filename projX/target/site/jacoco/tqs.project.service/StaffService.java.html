@@ -2,27 +2,32 @@
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.project.dto.StaffDTO;
 import tqs.project.model.Staff;
 import tqs.project.repository.StaffRepository;
 
 import java.util.List;
 
 @Service
-<span class="fc" id="L11">public class StaffService {</span>
+<span class="fc" id="L12">public class StaffService {</span>
 
     @Autowired
     private StaffRepository staffRepository;
 
-    public Staff createStaff(Staff staff) {
-<span class="nc" id="L17">        return staffRepository.save(staff);</span>
+    public Staff createStaff(StaffDTO dto) {
+<span class="nc" id="L18">        Staff staff = new Staff();</span>
+<span class="nc" id="L19">        staff.setName(dto.getName());</span>
+<span class="nc" id="L20">        staff.setEmail(dto.getEmail());</span>
+<span class="nc" id="L21">        staff.setPassword(dto.getPassword());</span>
+<span class="nc" id="L22">        return staffRepository.save(staff);</span>
     }
 
     public List&lt;Staff&gt; getAllStaff() {
-<span class="nc" id="L21">        return staffRepository.findAll();</span>
+<span class="nc" id="L26">        return staffRepository.findAll();</span>
     }
 
     public Staff getStaffById(Long id) {
-<span class="nc" id="L25">        return staffRepository.findById(id).orElse(null);</span>
+<span class="nc" id="L30">        return staffRepository.findById(id).orElse(null);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

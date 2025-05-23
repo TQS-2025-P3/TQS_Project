@@ -2,31 +2,49 @@
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.project.dto.CarDTO;
+import tqs.project.dto.UserDTO;
+import tqs.project.model.Car;
 import tqs.project.model.User;
 import tqs.project.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-<span class="fc" id="L11">public class UserService {</span>
+<span class="fc" id="L15">public class UserService {</span>
 
     @Autowired
     private UserRepository userRepository;
 
     public List&lt;User&gt; getAllUsers() {
-<span class="nc" id="L17">        return userRepository.findAll();</span>
+<span class="nc" id="L21">        return userRepository.findAll();</span>
     }
-
 
     public User getUserById(Long id) {
-<span class="nc" id="L22">        return userRepository.findById(id).orElse(null);</span>
+<span class="nc" id="L25">        return userRepository.findById(id).orElse(null);</span>
     }
 
-    public User createUser(User user) {
-<span class="nc bnc" id="L26" title="All 2 branches missed.">        if (user.getCars() != null) {</span>
-<span class="nc" id="L27">            user.getCars().forEach(car -&gt; car.setOwner(user));</span>
+    public User createUser(UserDTO userDTO) {
+<span class="fc" id="L29">        User user = new User();</span>
+<span class="fc" id="L30">        user.setName(userDTO.getName());</span>
+<span class="fc" id="L31">        user.setEmail(userDTO.getEmail());</span>
+<span class="fc" id="L32">        user.setPassword(userDTO.getPassword());</span>
+
+<span class="pc bpc" id="L34" title="1 of 2 branches missed.">        if (userDTO.getCars() != null) {</span>
+<span class="fc" id="L35">            List&lt;Car&gt; cars = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            for (CarDTO carDTO : userDTO.getCars()) {</span>
+<span class="fc" id="L37">                Car car = new Car();</span>
+<span class="fc" id="L38">                car.setBrand(carDTO.getBrand());</span>
+<span class="fc" id="L39">                car.setModel(carDTO.getModel());</span>
+<span class="fc" id="L40">                car.setRangeKm(carDTO.getRangeKm());</span>
+<span class="fc" id="L41">                car.setOwner(user);</span>
+<span class="fc" id="L42">                cars.add(car);</span>
+<span class="fc" id="L43">            }</span>
+<span class="fc" id="L44">            user.setCars(cars);</span>
         }
-<span class="nc" id="L29">        return userRepository.save(user);</span>
+
+<span class="fc" id="L47">        return userRepository.save(user);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

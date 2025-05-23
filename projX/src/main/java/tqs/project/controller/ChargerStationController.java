@@ -1,7 +1,9 @@
 package tqs.project.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tqs.project.dto.ChargerStationDTO;
 import tqs.project.model.ChargerStation;
 import tqs.project.service.ChargerStationService;
 
@@ -21,7 +23,7 @@ public class ChargerStationController {
     }
 
     @PostMapping
-    public ChargerStation createStation(@RequestBody ChargerStation station) {
-        return stationService.createStation(station);
+    public ChargerStation createStation(@Valid @RequestBody ChargerStationDTO stationDTO) {
+        return stationService.createStation(stationDTO);
     }
 }

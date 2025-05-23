@@ -2,6 +2,7 @@ package tqs.project.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.project.dto.StaffDTO;
 import tqs.project.model.Staff;
 import tqs.project.repository.StaffRepository;
 
@@ -13,7 +14,11 @@ public class StaffService {
     @Autowired
     private StaffRepository staffRepository;
 
-    public Staff createStaff(Staff staff) {
+    public Staff createStaff(StaffDTO dto) {
+        Staff staff = new Staff();
+        staff.setName(dto.getName());
+        staff.setEmail(dto.getEmail());
+        staff.setPassword(dto.getPassword());
         return staffRepository.save(staff);
     }
 

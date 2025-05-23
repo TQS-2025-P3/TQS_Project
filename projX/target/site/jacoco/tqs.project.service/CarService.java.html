@@ -2,27 +2,41 @@
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tqs.project.dto.CarDTO;
 import tqs.project.model.Car;
 import tqs.project.repository.CarRepository;
+import tqs.project.repository.UserRepository;
 
 import java.util.List;
 
 @Service
-<span class="fc" id="L11">public class CarService {</span>
+<span class="fc" id="L13">public class CarService {</span>
 
     @Autowired
     private CarRepository carRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List&lt;Car&gt; getAllCars() {
-<span class="nc" id="L17">        return carRepository.findAll();</span>
+<span class="fc" id="L22">        return carRepository.findAll();</span>
     }
 
-    public Car addCar(Car car) {
-<span class="nc" id="L21">        return carRepository.save(car);</span>
+    public Car addCar(CarDTO carDTO) {
+<span class="fc" id="L26">        Car car = new Car();</span>
+<span class="fc" id="L27">        car.setBrand(carDTO.getBrand());</span>
+<span class="fc" id="L28">        car.setModel(carDTO.getModel());</span>
+<span class="fc" id="L29">        car.setRangeKm(carDTO.getRangeKm());</span>
+
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (carDTO.getOwnerId() != null) {</span>
+<span class="fc" id="L32">            userRepository.findById(carDTO.getOwnerId()).ifPresent(car::setOwner);</span>
+        }
+
+<span class="fc" id="L35">        return carRepository.save(car);</span>
     }
 
     public Car getCarById(Long id) {
-<span class="nc" id="L25">        return carRepository.findById(id).orElse(null);</span>
+<span class="fc" id="L39">        return carRepository.findById(id).orElse(null);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
