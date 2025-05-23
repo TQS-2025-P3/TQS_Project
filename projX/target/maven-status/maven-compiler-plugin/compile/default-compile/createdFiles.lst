@@ -22,8 +22,8 @@ tqs/project/model/BookCharge.class
 tqs/project/dto/ChargerStationDTO.class
 tqs/project/service/BookChargeService.class
 tqs/project/service/CarService.class
-tqs/project/service/UserService.class
-tqs/project/service/StaffService.class
 tqs/project/controller/UserController.class
+tqs/project/service/StaffService.class
+tqs/project/service/UserService.class
 tqs/project/model/Staff.class
 tqs/project/model/Car.class

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: tqs.project.controller.UserControllerTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.988 s -- in tqs.project.controller.UserControllerTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.897 s - in tqs.project.controller.UserControllerTest
