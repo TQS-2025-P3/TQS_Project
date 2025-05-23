@@ -1,5 +1,5 @@
 # Projeto TQS: Sistema de Carregamento de Veículos Elétricos
-O objetivo do nosso projeto é desenvolver uma aplicação que permite um utilizador encontrar estações de carregamento de veículos eletrónicos ou híbridos, reservar tais estações por um periodo de tempo e fazer pagamento so serviço de forma simples
+O objetivo do nosso projeto é desenvolver uma aplicação que permite um utilizador encontrar estações de carregamento de veículos elétricos ou híbridos, reservar estações por um periodo de tempo e fazer pagamento do serviço de forma simples
 
 Team & Roles:
 Pedro Rei- Team Cordinator;
