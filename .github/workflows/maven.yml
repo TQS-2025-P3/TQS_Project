@@ -30,11 +30,11 @@ jobs:
         cache: maven
 
     - name: Build and run unit tests
-      working-directory: projX/demo
+      working-directory: projX
       run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
 
     - name: Run integration tests
-      working-directory: projX/demo
+      working-directory: projX
       run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
 
     - name: Add code coverage information to PR
@@ -50,7 +50,7 @@ jobs:
 
     - name: Push results to Xray on Jira Cloud
       if: always()
-      working-directory: projX/demo
+      working-directory: projX
       env:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
