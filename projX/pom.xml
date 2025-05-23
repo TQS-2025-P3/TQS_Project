@@ -82,14 +82,15 @@
         </dependency>
 
 		<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-test</artifactId>
-		<scope>test</scope>
-	</dependency>
-	<dependency>
-		<groupId>com.fasterxml.jackson.core</groupId>
-		<artifactId>jackson-databind</artifactId>
-	</dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-test</artifactId>
+		    <scope>test</scope>
+	    </dependency>
+
+	    <dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+	    </dependency>
 
         <dependency>
             <groupId>io.cucumber</groupId>
@@ -97,6 +98,13 @@
             <version>7.22.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+			<groupId>app.getxray</groupId>
+			<artifactId>xray-junit-extensions</artifactId>
+			<version>0.7.3</version>
+			<scope>test</scope>
+		</dependency>
 
         <!-- DevTools -->
         <dependency>
@@ -141,7 +149,7 @@
       			<artifactId>maven-surefire-plugin</artifactId>
       			<version>3.0.0</version>
     		</plugin>
-            
+
 			<plugin>
       			<groupId>org.apache.maven.plugins</groupId>
       			<artifactId>maven-failsafe-plugin</artifactId>
@@ -175,6 +183,18 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+				<groupId>app.getxray</groupId>
+				<artifactId>xray-maven-plugin</artifactId>
+				<version>0.8.0</version>
+				<configuration>
+					<cloud>true</cloud>
+					<projectKey>TQSPROJECT</projectKey>
+					<reportFormat>junit</reportFormat>
+                    <reportFile>reports/TEST-junit-jupiter.xml</reportFile>
+				</configuration>
+			</plugin>   
         </plugins>
     </build>
 </project>
