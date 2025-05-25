@@ -12,6 +12,28 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/Evera
+      SPRING_DATASOURCE_USERNAME: Evera_staff
+      SPRING_DATASOURCE_PASSWORD: senha1234
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_DATABASE: Evera
+          MYSQL_USER: Evera_staff
+          MYSQL_PASSWORD: senha1234
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+
     strategy:
       matrix:
         java: [ '17', '21' ]
@@ -29,6 +51,17 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Wait for MySQL to be ready
+      run: |
+        for i in {1..30}; do
+          if mysqladmin ping -h "mysql" -u"Evera_staff" -p"senha1234" --silent 2>/dev/null; then
+            echo "MySQL is ready!"
+            break
+          fi
+          echo "Waiting for MySQL..."
+          sleep 2
+        done
+
     - name: Build and run unit tests
       working-directory: projX
       run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
@@ -36,6 +69,12 @@ jobs:
     - name: Run integration tests
       working-directory: projX
       run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
+
+    - name: Print test logs on failure
+      if: failure()
+      run: |
+        echo "==== Surefire Report ===="
+        cat projX/target/surefire-reports/*.txt || true
 
     - name: Add code coverage information to PR
       id: jacoco-pr
