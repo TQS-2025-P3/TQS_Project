@@ -100,6 +100,27 @@
         </dependency>
 
         <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.14.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <version>1.12.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>1.9.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
 			<groupId>app.getxray</groupId>
 			<artifactId>xray-junit-extensions</artifactId>
 			<version>0.7.3</version>
@@ -148,6 +169,11 @@
       			<groupId>org.apache.maven.plugins</groupId>
       			<artifactId>maven-surefire-plugin</artifactId>
       			<version>3.0.0</version>
+                <configuration>
+                    <includes>
+                        <include>**/CucumberTest.java</include>
+                    </includes>
+                </configuration>
     		</plugin>
 
 			<plugin>
@@ -188,12 +214,37 @@
 				<groupId>app.getxray</groupId>
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.8.0</version>
-				<configuration>
-					<cloud>true</cloud>
-					<projectKey>TQSPROJECT</projectKey>
-					<reportFormat>junit</reportFormat>
-                    <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
-				</configuration>
+                <executions>
+                    <!-- JUnit -->
+                    <execution>
+                        <id>import-junit</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>import-results</goal>
+                        </goals>
+                        <configuration>
+                            <cloud>true</cloud>
+                            <projectKey>TQSPROJECT</projectKey>
+                            <reportFormat>junit</reportFormat>
+                            <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
+                        </configuration>
+                    </execution>
+
+                    <!-- Cucumber -->
+                    <execution>
+                        <id>import-cucumber</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>import-results</goal>
+                        </goals>
+                        <configuration>
+                            <cloud>true</cloud>
+                            <projectKey>TQSPROJECT</projectKey>
+                            <reportFormat>cucumber</reportFormat>
+                            <reportFile>target/surefire-reports/cucumber-report.json</reportFile>
+                        </configuration>
+                    </execution>
+                </executions>
 			</plugin>   
         </plugins>
     </build>
