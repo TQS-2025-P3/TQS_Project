@@ -228,7 +228,7 @@
                             <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>junit</reportFormat>
-                            <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
+                            <reportFile>${project.basedir}/target/surefire-reports/TEST-*.xml</reportFile>
                         </configuration>
                     </execution>
 
@@ -245,7 +245,7 @@
                             <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>cucumber</reportFormat>
-                            <reportFile>target/surefire-reports/cucumber-report.json</reportFile>
+                            <reportFile>${project.basedir}/target/surefire-reports/cucumber-report.json</reportFile>
                         </configuration>
                     </execution>
                 </executions>
