@@ -96,4 +96,4 @@ jobs:
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
         REVISON: ${{ github.ref_name}}
         TEST_ENVIRONMENT: java${{ matrix.java }}
-      run: mvn verify -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -X 
+      run: mvn xray:import-results -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -X 

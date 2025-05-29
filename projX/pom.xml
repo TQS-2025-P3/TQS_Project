@@ -218,7 +218,6 @@
                     <!-- JUnit -->
                     <execution>
                         <id>import-junit</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>import-results</goal>
                         </goals>
@@ -236,7 +235,6 @@
                     <!-- Cucumber -->
                     <execution>
                         <id>import-cucumber</id>
-                        <phase>verify</phase>
                         <goals>
                             <goal>import-results</goal>
                         </goals>
