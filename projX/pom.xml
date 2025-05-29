@@ -224,8 +224,9 @@
                         </goals>
                         <configuration>
                             <cloud>true</cloud>
-                            <clientId>${env.XRAYCLOUD_CLIENT_ID}</clientId>
-                            <clientSecret>${env.XRAYCLOUD_CLIENT_SECRET}</clientSecret>
+                            <clientId>${xray.clientId}</clientId>
+                            <clientSecret>${xray.clientSecret}</clientSecret>
+                            <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>junit</reportFormat>
                             <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
@@ -241,9 +242,9 @@
                         </goals>
                         <configuration>
                             <cloud>true</cloud>
-                            <clientId>${env.XRAYCLOUD_CLIENT_ID}</clientId>
-                            <clientSecret>${env.XRAYCLOUD_CLIENT_SECRET}</clientSecret>
-                            <testPlanKey>${env.XRAYCLOUD_TEST_PLAN_KEY}</testPlanKey>
+                            <clientId>${xray.clientId}</clientId>
+                            <clientSecret>${xray.clientSecret}</clientSecret>
+                            <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>cucumber</reportFormat>
                             <reportFile>target/surefire-reports/cucumber-report.json</reportFile>
