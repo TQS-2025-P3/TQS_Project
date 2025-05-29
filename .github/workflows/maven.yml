@@ -62,13 +62,13 @@ jobs:
           sleep 2
         done
 
-    - name: Run tests with H2 profile
+    - name: Run tests
       working-directory: projX
-      run: mvn test -Dspring.profiles.active=h2 -Djava.version=${{ matrix.java }}
+      run: mvn test -Djava.version=${{ matrix.java }}
 
-    - name: Package app with MySQL profile
+    - name: Package app
       working-directory: projX
-      run: mvn package -DskipTests -Dspring.profiles.active=mysql -Djava.version=${{ matrix.java }}
+      run: mvn package -DskipTests -Djava.version=${{ matrix.java }}
 
     - name: Run integration tests
       working-directory: projX
