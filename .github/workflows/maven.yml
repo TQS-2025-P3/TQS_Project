@@ -106,4 +106,4 @@ jobs:
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
         REVISON: ${{ github.ref_name}}
-      run: mvn xray:cucumber-import -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -Dxray.reportFormat=cucumber -Dxray.reportFile=target/surefire-reports/cucumber-report.json
+      run: mvn xray:import-results -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -Dxray.reportFormat=cucumber -Dxray.reportFile=target/surefire-reports/cucumber-report.json
