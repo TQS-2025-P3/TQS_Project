@@ -14,12 +14,18 @@ services:
       MYSQL_PASSWORD: senha1234
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p=rootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   springapp:
     build: .
     container_name: spring_app
     depends_on:
-      - mysql
+      mysql:
+          condition: service_healthy
     ports:
       - "8080:8080"
     environment:
