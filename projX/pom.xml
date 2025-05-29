@@ -19,8 +19,6 @@
 
     <properties>
         <java.version>21</java.version>
-        <xray.junitReportFile>${project.basedir}/target/surefire-reports</xray.junitReportFile>
-        <xray.cucumberReportFile>${project.basedir}/target/surefire-reports/cucumber-report.json</xray.cucumberReportFile>
     </properties>
 
     <dependencies>
