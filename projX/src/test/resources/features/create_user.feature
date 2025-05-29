@@ -1,4 +1,3 @@
-@TQSPROJECT-63
 Feature: User creation with cars
 
   Scenario: Creating a user with multiple cars

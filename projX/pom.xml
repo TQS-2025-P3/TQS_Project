@@ -165,11 +165,6 @@
       			<groupId>org.apache.maven.plugins</groupId>
       			<artifactId>maven-surefire-plugin</artifactId>
       			<version>3.0.0</version>
-                <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
-                </configuration>
     		</plugin>
 
 			<plugin>
@@ -210,43 +205,12 @@
 				<groupId>app.getxray</groupId>
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.8.0</version>
-                <executions>
-                    <!-- JUnit -->
-                    <execution>
-                        <id>import-junit</id>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>import-results</goal>
-                        </goals>
-                        <configuration>
-                            <cloud>true</cloud>
-                            <clientId>${xray.clientId}</clientId>
-                            <clientSecret>${xray.clientSecret}</clientSecret>
-                            <testPlanKey>${xray.testPlanKey}</testPlanKey>
-                            <projectKey>TQSPROJECT</projectKey>
-                            <reportFormat>junit</reportFormat>
-                            <reportFile>${xray.junitReportFile}</reportFile>
-                        </configuration>
-                    </execution>
-
-                    <!-- Cucumber -->
-                    <execution>
-                        <id>import-cucumber</id>
-                        <phase>none</phase>
-                        <goals>
-                            <goal>import-results</goal>
-                        </goals>
-                        <configuration>
-                            <cloud>true</cloud>
-                            <clientId>${xray.clientId}</clientId>
-                            <clientSecret>${xray.clientSecret}</clientSecret>
-                            <testPlanKey>${xray.testPlanKey}</testPlanKey>
-                            <projectKey>TQSPROJECT</projectKey>
-                            <reportFormat>cucumber</reportFormat>
-                            <reportFile>${xray.cucumberReportFile}</reportFile>
-                        </configuration>
-                    </execution>
-                </executions>
+                    <configuration>
+                        <cloud>true</cloud>                     
+                        <projectKey>TQSPROJECT</projectKey>
+                        <reportFormat>junit</reportFormat>
+                        <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                    </configuration>
 			</plugin>   
         </plugins>
     </build>
