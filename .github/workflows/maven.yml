@@ -87,6 +87,19 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
+    - name: Debug secrets
+      working-directory: projX
+      run: |
+        echo "Client ID: ${XRAYCLOUD_CLIENT_ID:0:5}***"
+        echo "Client Secret: ${XRAYCLOUD_CLIENT_SECRET:0:5}***"
+        echo "Test Plan Key: $XRAYCLOUD_TEST_PLAN_KEY"
+        echo "Revision: $REVISON"
+      env:
+        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
+        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
+        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
+        REVISON: ${{ github.ref_name }}
+
     - name: Push JUnit results to Xray on Jira Cloud
       if: always()
       working-directory: projX
