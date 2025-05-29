@@ -95,8 +95,18 @@ jobs:
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
         REVISON: ${{ github.ref_name}}
-      run: find target/surefire-reports -name 'TEST-*.xml' -exec
-            mvn xray:import-results -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -Dxray.reportFormat=junit -Dxray.reportFile={} \;
+      run: |
+          for file in target/surefire-reports/TEST-*.xml; do
+            echo "Uploading $file"
+            mvn xray:import-results \
+              -Dxray.clientId=$XRAYCLOUD_CLIENT_ID \
+              -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET \
+              -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY \
+              -Dxray.revision=$REVISON \
+              -Dxray.verbose=true \
+              -Dxray.reportFormat=junit \
+              -Dxray.reportFile=$file
+          done
 
     - name: Push Cucumber results to Xray on Jira Cloud
       if: always()
