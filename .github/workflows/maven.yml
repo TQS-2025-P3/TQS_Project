@@ -12,10 +12,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    env:
-      SPRING_DATASOURCE_URL: jdbc:mysql://localhost:3306/Evera
-      SPRING_DATASOURCE_USERNAME: Evera_staff
-      SPRING_DATASOURCE_PASSWORD: senha1234
 
     services:
       mysql:
@@ -62,9 +58,13 @@ jobs:
           sleep 2
         done
 
-    - name: Build and run unit tests
+    - name: Run tests
       working-directory: projX
-      run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
+      run: mvn test -Djava.version=${{ matrix.java }}
+
+    - name: Package app
+      working-directory: projX
+      run: mvn package -DskipTests -Djava.version=${{ matrix.java }}
 
     - name: Run integration tests
       working-directory: projX
@@ -94,6 +94,15 @@ jobs:
         XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
         XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
         XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISON: ${{ github.ref_name}}
-        TEST_ENVIRONMENT: java${{ matrix.java }}
-      run: mvn -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON xray:import-results -Dxray.verbose=true -X 
+        REVISION: ${{ github.ref_name }}
+      run: |
+          mvn \
+            -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
+            -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
+            -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} \
+            -Dxray.projectKey=TQSPROJECT \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=target/surefire-reports/TEST-*.xml \
+            app.getxray:xray-maven-plugin:import-results
+
+    

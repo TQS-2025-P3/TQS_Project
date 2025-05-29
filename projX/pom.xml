@@ -81,12 +81,6 @@
             <scope>test</scope>
         </dependency>
 
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-test</artifactId>
-		    <scope>test</scope>
-	    </dependency>
-
 	    <dependency>
 		    <groupId>com.fasterxml.jackson.core</groupId>
 		    <artifactId>jackson-databind</artifactId>
@@ -96,6 +90,27 @@
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
             <version>7.22.1</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>7.14.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-api</artifactId>
+            <version>1.12.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>1.9.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -188,12 +203,12 @@
 				<groupId>app.getxray</groupId>
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.8.0</version>
-				<configuration>
-					<cloud>true</cloud>
-					<projectKey>TQSPROJECT</projectKey>
-					<reportFormat>junit</reportFormat>
-                    <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
-				</configuration>
+                    <configuration>
+                        <cloud>true</cloud>                     
+                        <projectKey>TQSPROJECT</projectKey>
+                        <reportFormat>junit</reportFormat>
+                        <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
+                    </configuration>
 			</plugin>   
         </plugins>
     </build>
