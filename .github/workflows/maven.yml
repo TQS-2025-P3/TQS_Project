@@ -87,6 +87,14 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
+    - name: Print Xray credentials
+      if: always()
+      working-directory: projX
+      run: |
+        echo "Client ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}" | head -c 30
+        echo ""
+        echo "Client Secret: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}" | head -c 30
+
     - name: Push JUnit results to Xray on Jira Cloud
       if: always()
       working-directory: projX
@@ -108,10 +116,10 @@ jobs:
       working-directory: projX
       run: |
         mvn xray:import-results \
-        -Dxray.clientId=${{ secrets.XRAYCLOUD_CLIENT_ID }} \
-        -Dxray.clientSecret=${{ secrets.XRAYCLOUD_CLIENT_SECRET }} \
-        -Dxray.testPlanKey=${{ vars.XRAYCLOUD_TEST_PLAN_KEY }} \
-        -Dxray.revision=${{ github.ref_name }} \
-        -Dxray.verbose=true \
-        -Dxray.reportFormat=cucumber \
-        -Dxray.reportFile=target/surefire-reports/cucumber-report.json
+          -Dxray.clientId=${{ secrets.XRAYCLOUD_CLIENT_ID }} \
+          -Dxray.clientSecret=${{ secrets.XRAYCLOUD_CLIENT_SECRET }} \
+          -Dxray.testPlanKey=${{ vars.XRAYCLOUD_TEST_PLAN_KEY }} \
+          -Dxray.revision=${{ github.ref_name }} \
+          -Dxray.verbose=true \
+          -Dxray.reportFormat=cucumber \
+          -Dxray.reportFile=target/surefire-reports/cucumber-report.json
