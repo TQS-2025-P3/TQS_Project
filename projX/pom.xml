@@ -209,7 +209,7 @@
                         <cloud>true</cloud>                     
                         <projectKey>TQSPROJECT</projectKey>
                         <reportFormat>junit</reportFormat>
-                        <reportFile>target/TEST-junit-jupiter.xml</reportFile>
+                        <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
                     </configuration>
 			</plugin>   
         </plugins>

@@ -8,7 +8,7 @@ import org.junit.platform.suite.api.*;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = Constants.GLUE_PROPERTY_NAME, value = "tqs.project.steps")
-@ConfigurationParameter(key = Constants.PLUGIN_PROPERTY_NAME, value = "pretty")
+@ConfigurationParameter(key = Constants.PLUGIN_PROPERTY_NAME, value = "pretty, junit:target/surefire-reports/TEST-tqs.project.CucumberTest.xml")
 public class CucumberTest {
 
 }
