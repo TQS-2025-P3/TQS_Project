@@ -62,9 +62,13 @@ jobs:
           sleep 2
         done
 
-    - name: Build and run unit tests
+    - name: Run tests with H2 profile
       working-directory: projX
-      run: mvn -B package --file pom.xml -Djava.version=${{ matrix.java }}
+      run: mvn test -Dspring.profiles.active=h2 -Djava.version=${{ matrix.java }}
+
+    - name: Package app with MySQL profile
+      working-directory: projX
+      run: mvn package -DskipTests -Dspring.profiles.active=mysql -Djava.version=${{ matrix.java }}
 
     - name: Run integration tests
       working-directory: projX
@@ -87,15 +91,7 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
-    - name: Print Xray credentials
-      if: always()
-      working-directory: projX
-      run: |
-        echo "Client ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}" | head -c 30
-        echo ""
-        echo "Client Secret: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}" | head -c 30
-
-    - name: Push JUnit results to Xray on Jira Cloud
+    - name: Push results to Xray on Jira Cloud
       if: always()
       working-directory: projX
       env:
