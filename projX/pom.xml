@@ -171,7 +171,7 @@
       			<version>3.0.0</version>
                 <configuration>
                     <includes>
-                        <include>**/CucumberTest.java</include>
+                        <include>**/*Test.java</include>
                     </includes>
                 </configuration>
     		</plugin>
@@ -224,6 +224,8 @@
                         </goals>
                         <configuration>
                             <cloud>true</cloud>
+                            <clientId>${env.XRAYCLOUD_CLIENT_ID}</clientId>
+                            <clientSecret>${env.XRAYCLOUD_CLIENT_SECRET}</clientSecret>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>junit</reportFormat>
                             <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
@@ -239,6 +241,9 @@
                         </goals>
                         <configuration>
                             <cloud>true</cloud>
+                            <clientId>${env.XRAYCLOUD_CLIENT_ID}</clientId>
+                            <clientSecret>${env.XRAYCLOUD_CLIENT_SECRET}</clientSecret>
+                            <testPlanKey>${env.XRAYCLOUD_TEST_PLAN_KEY}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>cucumber</reportFormat>
                             <reportFile>target/surefire-reports/cucumber-report.json</reportFile>
