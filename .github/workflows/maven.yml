@@ -87,46 +87,31 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
-    - name: Debug secrets
-      working-directory: projX
-      run: |
-        echo "Client ID: ${XRAYCLOUD_CLIENT_ID:0:5}***"
-        echo "Client Secret: ${XRAYCLOUD_CLIENT_SECRET:0:5}***"
-        echo "Test Plan Key: $XRAYCLOUD_TEST_PLAN_KEY"
-        echo "Revision: $REVISON"
-      env:
-        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
-        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
-        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISON: ${{ github.ref_name }}
-
     - name: Push JUnit results to Xray on Jira Cloud
       if: always()
       working-directory: projX
-      env:
-        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
-        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
-        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISON: ${{ github.ref_name}}
       run: |
-          for file in target/surefire-reports/TEST-*.xml; do
-            echo "Uploading $file"
-            mvn xray:import-results \
-              -Dxray.clientId=$XRAYCLOUD_CLIENT_ID \
-              -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET \
-              -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY \
-              -Dxray.revision=$REVISON \
-              -Dxray.verbose=true \
-              -Dxray.reportFormat=junit \
-              -Dxray.reportFile=$file
-          done
+        for file in target/surefire-reports/TEST-*.xml; do
+        echo "Uploading $file"
+        mvn xray:import-results \
+          -Dxray.clientId=${{ secrets.XRAYCLOUD_CLIENT_ID }} \
+          -Dxray.clientSecret=${{ secrets.XRAYCLOUD_CLIENT_SECRET }} \
+          -Dxray.testPlanKey=${{ vars.XRAYCLOUD_TEST_PLAN_KEY }} \
+          -Dxray.revision=${{ github.ref_name }} \
+          -Dxray.verbose=true \
+          -Dxray.reportFormat=junit \
+          -Dxray.reportFile=$file
+        done
 
     - name: Push Cucumber results to Xray on Jira Cloud
       if: always()
       working-directory: projX
-      env:
-        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
-        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
-        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
-        REVISON: ${{ github.ref_name}}
-      run: mvn xray:import-results -Dxray.clientId=$XRAYCLOUD_CLIENT_ID -Dxray.clientSecret=$XRAYCLOUD_CLIENT_SECRET -Dxray.testPlanKey=$XRAYCLOUD_TEST_PLAN_KEY -Dxray.revision=$REVISON -Dxray.verbose=true -Dxray.reportFormat=cucumber -Dxray.reportFile=target/surefire-reports/cucumber-report.json
+      run: |
+        mvn xray:import-results \
+        -Dxray.clientId=${{ secrets.XRAYCLOUD_CLIENT_ID }} \
+        -Dxray.clientSecret=${{ secrets.XRAYCLOUD_CLIENT_SECRET }} \
+        -Dxray.testPlanKey=${{ vars.XRAYCLOUD_TEST_PLAN_KEY }} \
+        -Dxray.revision=${{ github.ref_name }} \
+        -Dxray.verbose=true \
+        -Dxray.reportFormat=cucumber \
+        -Dxray.reportFile=target/surefire-reports/cucumber-report.json
