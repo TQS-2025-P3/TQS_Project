@@ -19,6 +19,8 @@
 
     <properties>
         <java.version>21</java.version>
+        <xray.junitReportFile>${project.basedir}/target/surefire-reports</xray.junitReportFile>
+        <xray.cucumberReportFile>${project.basedir}/target/surefire-reports/cucumber-report.json</xray.cucumberReportFile>
     </properties>
 
     <dependencies>
@@ -218,6 +220,7 @@
                     <!-- JUnit -->
                     <execution>
                         <id>import-junit</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>import-results</goal>
                         </goals>
@@ -228,13 +231,14 @@
                             <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>junit</reportFormat>
-                            <reportFile>${project.basedir}/target/surefire-reports/TEST-*.xml</reportFile>
+                            <reportFile>${xray.junitReportFile}</reportFile>
                         </configuration>
                     </execution>
 
                     <!-- Cucumber -->
                     <execution>
                         <id>import-cucumber</id>
+                        <phase>none</phase>
                         <goals>
                             <goal>import-results</goal>
                         </goals>
@@ -245,7 +249,7 @@
                             <testPlanKey>${xray.testPlanKey}</testPlanKey>
                             <projectKey>TQSPROJECT</projectKey>
                             <reportFormat>cucumber</reportFormat>
-                            <reportFile>${project.basedir}/target/surefire-reports/cucumber-report.json</reportFile>
+                            <reportFile>${xray.cucumberReportFile}</reportFile>
                         </configuration>
                     </execution>
                 </executions>
