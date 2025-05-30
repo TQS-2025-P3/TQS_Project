@@ -1,39 +1,56 @@
 package tqs.project.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
+
 
 public class CarDTO {
+    private String brand;             // Marca do carro, ex: "Tesla"
+    private String model;             // Modelo do carro, ex: "Model 3"
+    private String plate;             // Matrícula, ex: "AA-00-XX"
+    private double batteryCapacity;   // Capacidade da bateria em kWh
+    private Long userId;              // ID do utilizador (associação)
 
-    @NotBlank(message = "A marca é obrigatória.")
-    private String brand;
 
-    @NotBlank(message = "O modelo é obrigatório.")
-    private String model;
+    
+    // Getters e Setters
 
-    @NotNull(message = "A autonomia é obrigatória.")
-    private Integer rangeKm;
-
-    private Long ownerId;
-
-    public CarDTO() {}
-
-    public CarDTO(String brand, String model, Integer rangeKm, Long ownerId) {
-        this.brand = brand;
-        this.model = model;
-        this.rangeKm = rangeKm;
-        this.ownerId = ownerId;
+    public String getBrand() {
+        return brand;
     }
 
-    public String getBrand() { return brand; }
-    public void setBrand(String brand) { this.brand = brand; }
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
 
-    public String getModel() { return model; }
-    public void setModel(String model) { this.model = model; }
+    public String getModel() {
+        return model;
+    }
 
-    public Integer getRangeKm() { return rangeKm; }
-    public void setRangeKm(Integer rangeKm) { this.rangeKm = rangeKm; }
+    public void setModel(String model) {
+        this.model = model;
+    }
 
-    public Long getOwnerId() { return ownerId; }
-    public void setOwnerId(Long ownerId) { this.ownerId = ownerId; }
+    public String getPlate() {
+        return plate;
+    }
+
+    public void setPlate(String plate) {
+        this.plate = plate;
+    }
+
+    public double getBatteryCapacity() {
+        return batteryCapacity;
+    }
+
+    public void setBatteryCapacity(double batteryCapacity) {
+        this.batteryCapacity = batteryCapacity;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

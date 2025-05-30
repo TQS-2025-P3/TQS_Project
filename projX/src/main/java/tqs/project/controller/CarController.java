@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/cars")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:3000")
 public class CarController {
 
     @Autowired
@@ -31,4 +31,19 @@ public class CarController {
     public Car getCarById(@PathVariable Long id) {
         return carService.getCarById(id);
     }
+
+    @GetMapping("/user/{userId}")
+    public List<Car> getCarsByUser(@PathVariable Long userId) {
+    return carService.getCarsByUserId(userId);
+}
+
+    @DeleteMapping("/{id}")
+    public void deleteCar(@PathVariable Long id) {
+        carService.deleteCarById(id);
+    }
+
+    @PutMapping("/{id}")
+    public Car updateCar(@PathVariable Long id, @RequestBody CarDTO carDTO) {
+    return carService.updateCar(id, carDTO);
+}
 }
