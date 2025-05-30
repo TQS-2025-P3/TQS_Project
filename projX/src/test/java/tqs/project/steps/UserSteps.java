@@ -1,5 +1,6 @@
 package tqs.project.steps;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -36,11 +37,17 @@ public class UserSteps {
         for (Map<String, String> row : rows) {
             String brand = row.get("brand");
             String model = row.get("model");
-            int rangeKm = Integer.parseInt(row.get("rangeKm"));
-            Long ownerId = Long.parseLong(row.get("ownerId"));
-    
-            userDTO.getCars().add(new CarDTO(brand, model, rangeKm, ownerId));
-        }
+            String plate = row.get("plate");
+            double battery = Double.parseDouble(row.get("batteryCapacity"));
+
+            CarDTO car = new CarDTO();
+            car.setBrand(brand);
+            car.setModel(model);
+            car.setPlate(plate);
+            car.setBatteryCapacity(battery);
+
+            userDTO.getCars().add(car);}
+
     }
 
     @When("the user is saved") 

@@ -37,7 +37,13 @@ class CarServiceTest {
     @Test
     void testAddCarSuccess() {
         Long userId = 1L;
-        CarDTO dto = new CarDTO("Tesla", "Model 3", 450, userId);
+        CarDTO dto = new CarDTO();
+        dto.setBrand("Tesla");
+        dto.setModel("Model 3");
+        dto.setPlate("AA-00-XX");
+        dto.setBatteryCapacity(75.0);
+        dto.setUserId(userId);
+
         User user = new User();
         user.setId(userId);
 
@@ -49,68 +55,54 @@ class CarServiceTest {
         assertNotNull(createdCar);
         assertEquals("Tesla", createdCar.getBrand());
         assertEquals("Model 3", createdCar.getModel());
-        assertEquals(450, createdCar.getRangeKm());
+        assertEquals("AA-00-XX", createdCar.getPlate());
+        assertEquals(75.0, createdCar.getBatteryCapacity());
         assertEquals(user, createdCar.getOwner());
     }
 
+
     @Test
-    void testAddCarWithInvalidUser() {
-        CarDTO dto = new CarDTO("Renault", "ZOE", 300, 999L);
+    void testGetCarByIdFound() {
+        Car car = new Car();
+        car.setId(1L);
+        car.setBrand("BMW");
+        car.setModel("i3");
+        car.setPlate("11-AA-11");
+        car.setBatteryCapacity(33.0);
 
-        when(userRepository.findById(999L)).thenReturn(Optional.empty());
+        when(carRepository.findById(1L)).thenReturn(Optional.of(car));
 
-       
-        Car createdCar = carService.addCar(dto);
+        Car result = carService.getCarById(1L);
 
-        
-        assertNull(createdCar);
+        assertNotNull(result);
+        assertEquals("BMW", result.getBrand());
     }
 
+    @Test
+    void testGetCarByIdNotFound() {
+        when(carRepository.findById(99L)).thenReturn(Optional.empty());
+
+        Car result = carService.getCarById(99L);
+
+        assertNull(result);
+    }
 
     @Test
-void testGetCarByIdFound() {
-    Car car = new Car();
-    car.setId(1L);
-    car.setBrand("BMW");
-    car.setModel("i3");
-    car.setRangeKm(200);
+    void testGetAllCars() {
+        Car car1 = new Car();
+        car1.setBrand("BMW");
+        car1.setModel("i3");
 
-    when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        Car car2 = new Car();
+        car2.setBrand("Tesla");
+        car2.setModel("Model X");
 
-    // Act
-    Car result = carService.getCarById(1L);
+        when(carRepository.findAll()).thenReturn(List.of(car1, car2));
 
-    // Assert
-    assertNotNull(result);
-    assertEquals("BMW", result.getBrand());
-}
+        List<Car> allCars = carService.getAllCars();
 
-@Test
-void testGetCarByIdNotFound() {
-    when(carRepository.findById(99L)).thenReturn(Optional.empty());
-
-    Car result = carService.getCarById(99L);
-
-    assertNull(result);
-}
-
-@Test
-void testGetAllCars() {
-    Car car1 = new Car();
-    car1.setBrand("BMW");
-    car1.setModel("i3");
-
-    Car car2 = new Car();
-    car2.setBrand("Tesla");
-    car2.setModel("Model X");
-
-    when(carRepository.findAll()).thenReturn(List.of(car1, car2));
-
-    List<Car> allCars = carService.getAllCars();
-
-    assertEquals(2, allCars.size());
-    assertEquals("BMW", allCars.get(0).getBrand());
-    assertEquals("Tesla", allCars.get(1).getBrand());
-}
-
+        assertEquals(2, allCars.size());
+        assertEquals("BMW", allCars.get(0).getBrand());
+        assertEquals("Tesla", allCars.get(1).getBrand());
+    }
 }

@@ -70,14 +70,16 @@ public class UserControllerTest {
         car1.setId(1L);
         car1.setBrand("Tesla");
         car1.setModel("Model S");
-        car1.setRangeKm(600);
+        car1.setPlate("11-AA-11");
+        car1.setBatteryCapacity(100.0);
         car1.setOwner(user);
 
         Car car2 = new Car();
         car2.setId(2L);
         car2.setBrand("Nissan");
         car2.setModel("Leaf");
-        car2.setRangeKm(250);
+        car2.setPlate("22-BB-22");
+        car2.setBatteryCapacity(40.0);
         car2.setOwner(user);
 
         user.setCars(Arrays.asList(car1, car2));
