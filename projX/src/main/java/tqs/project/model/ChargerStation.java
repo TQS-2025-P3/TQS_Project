@@ -17,7 +17,11 @@ public class ChargerStation {
     private Long id;
 
     private String name;
-    private String location;
+
+    private double latitude;
+    private double longitude;
+
+    private int slots;
 
     @ManyToOne
     @JoinColumn(name = "staff_id")

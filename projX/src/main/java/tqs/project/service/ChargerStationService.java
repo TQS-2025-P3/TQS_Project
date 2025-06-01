@@ -30,7 +30,9 @@ public class ChargerStationService {
 
         ChargerStation station = new ChargerStation();
         station.setName(dto.getName());
-        station.setLocation(dto.getLocation());
+        station.setLatitude(dto.getLatitude());
+        station.setLongitude(dto.getLongitude());
+        station.setSlots(dto.getSlots());
         station.setStaff(staff);
 
         return stationRepository.save(station);
