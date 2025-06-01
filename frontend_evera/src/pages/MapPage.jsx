@@ -30,7 +30,7 @@ export default function MapPage() {
 
   const handleReserve = (station) => {
     alert(`Estação selecionada: ${station.name}`);
-    _//modal p reservar com detalhes
+    //modal p reservar com detalhes
   };
 
   return (
