@@ -83,4 +83,22 @@ public class UserService {
         }
         return new ArrayList<>();
     }
+
+    public User addFunds(Long userId, double amount) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
+    
+        if (amount < 0) {
+            throw new IllegalArgumentException("Montante inválido.");
+        }
+    
+        user.setBalance(user.getBalance() + amount);
+        return userRepository.save(user);
+    }
+
+    public Double getUserBalance(Long id) {
+        User user = userRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
+        return user.getBalance();
+    }
 }

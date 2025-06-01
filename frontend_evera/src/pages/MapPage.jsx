@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Container, Typography, CircularProgress } from '@mui/material';
+import {
+  Container, Typography, CircularProgress, Dialog, DialogTitle,
+  DialogContent, DialogActions, Button, RadioGroup, FormControlLabel, Radio
+} from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
@@ -12,8 +15,21 @@ L.Icon.Default.mergeOptions({
 });
 
 export default function MapPage() {
+  const userId = 1;
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [vehicles, setVehicles] = useState([]);
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [selectedCarId, setSelectedCarId] = useState(null);
+  const [selectedCar, setSelectedCar] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
+  const [reservationDetails, setReservationDetails] = useState(null);
+  const [userBalance, setUserBalance] = useState(null);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+
 
   useEffect(() => {
     fetch("http://localhost:8080/api/stations")
@@ -28,20 +44,102 @@ export default function MapPage() {
       });
   }, []);
 
-  const handleReserve = (station) => {
-    alert(`Estação selecionada: ${station.name}`);
-    _//modal p reservar com detalhes
+  useEffect(() => {
+    if (selectedCarId) {
+      const found = vehicles.find(v => v.id.toString() === selectedCarId);
+      setSelectedCar(found);
+    } else {
+      setSelectedCar(null);
+    }
+  }, [selectedCarId, vehicles]);
+
+  const calculateCost = () => {
+    return selectedCar ? (selectedCar.batteryCapacity * 0.10).toFixed(2) : "0.00";
   };
 
+  const handleReserve = async (station) => {
+    setSelectedStation(station);
+    try {
+      const res = await fetch(`http://localhost:8080/api/cars/user/${userId}`);
+      const data = await res.json();
+      setVehicles(data);
+      setModalOpen(true);
+    } catch (error) {
+      console.error("Erro ao buscar veículos:", error);
+    }
+  };
+
+  const handleConfirmReserve = async () => {
+    const bookingData = {
+      userId: userId,
+      carId: parseInt(selectedCarId),
+      stationId: selectedStation.id,
+      duration: 60
+    };
+  
+    try {
+      const response = await fetch("http://localhost:8080/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(bookingData)
+      });
+  
+      if (!response.ok) {
+        const errText = await response.text();
+        console.log("Mensagem de erro bruta:", errText);
+        const lowerErr = errText.toLowerCase();
+      
+        if (lowerErr.includes("reserva ativa")) {
+          throw new Error("Este veículo já possui uma reserva ativa. Finalize-a antes de reservar novamente.");
+        } else if (lowerErr.includes("saldo insuficiente")) {
+          throw new Error("Saldo insuficiente. Por favor, adicione fundos à sua conta.");
+        } else if (lowerErr.includes("slots disponíveis")) {
+          throw new Error("Esta estação está atualmente sem vagas disponíveis.");
+        } else {
+          throw new Error("Erro inesperado ao criar reserva.");
+        }
+      }
+      
+  
+      const result = await response.json();
+  
+      window.dispatchEvent(new Event("userUpdated"));
+  
+      setReservationDetails({
+        station: result.chargerStation.name,
+        vehicle: `${result.car.brand} ${result.car.model}`,
+        cost: (result.car.batteryCapacity * 0.10).toFixed(2)
+      });
+  
+      const userRes = await fetch(`http://localhost:8080/api/users/${userId}`);
+      const userData = await userRes.json();
+      setUserBalance(userData.balance);
+  
+      const updatedStations = await fetch("http://localhost:8080/api/stations").then(r => r.json());
+      setStations(updatedStations);
+  
+      setModalOpen(false);
+      setSelectedCarId(null);
+      setSelectedCar(null);
+      setSuccessDialogOpen(true);
+    } catch (error) {
+      console.error("Erro ao confirmar reserva:", error);
+      setErrorMessage(error.message);
+      setErrorDialogOpen(true);
+    }
+      
+  };
+  
+  
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        Mapa de Estações
-      </Typography>
+      <Typography variant="h4" gutterBottom>Mapa de Estações</Typography>
       <Typography variant="body1" gutterBottom>
-        Clique numa estação para ver mais detalhes.
+        Clique numa estação para ver mais detalhes e reservar.
       </Typography>
-
+  
       {loading ? (
         <CircularProgress />
       ) : (
@@ -55,7 +153,7 @@ export default function MapPage() {
               <Marker key={station.id} position={[station.latitude, station.longitude]}>
                 <Popup>
                   <strong>{station.name}</strong><br />
-                  Slots disponíveis: {station.slots}<br />
+                  Slots disponíveis: {station.availableSlots}<br />
                   <button
                     style={{
                       marginTop: '8px',
@@ -76,6 +174,71 @@ export default function MapPage() {
           </MapContainer>
         </div>
       )}
+  
+      
+      <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
+        <DialogTitle>Escolha um veículo</DialogTitle>
+        <DialogContent>
+          {vehicles.length === 0 ? (
+            <Typography>Não há veículos registados.</Typography>
+          ) : (
+            <>
+              <RadioGroup value={selectedCarId} onChange={(e) => setSelectedCarId(e.target.value)}>
+                {vehicles.map(car => (
+                  <FormControlLabel
+                    key={car.id}
+                    value={car.id.toString()}
+                    control={<Radio />}
+                    label={`${car.brand} ${car.model} (${car.plate}) - ${car.batteryCapacity} kWh`}
+                  />
+                ))}
+              </RadioGroup>
+              {selectedCar && (
+                <Typography sx={{ mt: 2 }}>
+                  <strong>Custo estimado:</strong> {calculateCost()} €
+                </Typography>
+              )}
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setModalOpen(false)}>Cancelar</Button>
+          <Button onClick={handleConfirmReserve} disabled={!selectedCarId} variant="contained">
+            Confirmar Reserva
+          </Button>
+        </DialogActions>
+      </Dialog>
+  
+      
+      <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
+        <DialogTitle>Reserva efetuada com sucesso!</DialogTitle>
+        <DialogContent>
+          {reservationDetails && (
+            <>
+              <Typography>Estação: {reservationDetails.station}</Typography>
+              <Typography>Veículo: {reservationDetails.vehicle}</Typography>
+              <Typography>Custo: {reservationDetails.cost} €</Typography>
+              <Typography>Saldo restante: {userBalance?.toFixed(2)} €</Typography>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setSuccessDialogOpen(false)}>Fechar</Button>
+        </DialogActions>
+      </Dialog>
+  
+      
+      <Dialog open={errorDialogOpen} onClose={() => setErrorDialogOpen(false)}>
+        <DialogTitle sx={{ color: 'error.main' }}>Erro na Reserva</DialogTitle>
+        <DialogContent>
+          <Typography>{errorMessage}</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setErrorDialogOpen(false)}>Fechar</Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
+  
+  
 }

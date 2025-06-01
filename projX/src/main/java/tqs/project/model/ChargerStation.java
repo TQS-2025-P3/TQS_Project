@@ -23,8 +23,16 @@ public class ChargerStation {
 
     private int slots;
 
+    @Column(name = "slots_in_use")
+    private int slotsInUse;
+
     @ManyToOne
     @JoinColumn(name = "staff_id")
     @JsonBackReference
     private Staff staff;
+
+    @Transient
+    public int getAvailableSlots() {
+        return slots - slotsInUse;
+    }
 }

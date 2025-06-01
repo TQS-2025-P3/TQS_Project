@@ -9,6 +9,11 @@ curl -s -X POST http://localhost:8080/api/users \
     "password": "1234"
   }'
 
+
+
+# adicionar fundos ao utilizador com id 1
+curl -X PATCH "http://localhost:8080/api/users/1/addFunds?amount=25.00"
+
 # Criar staff com id 1
 curl -s -X POST http://localhost:8080/api/staffs \
   -H "Content-Type: application/json" \
