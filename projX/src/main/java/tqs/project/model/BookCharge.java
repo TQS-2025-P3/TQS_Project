@@ -2,6 +2,7 @@ package tqs.project.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import tqs.project.model.enums.BookingStatus;
 
 import java.time.LocalDateTime;
 
@@ -18,10 +19,12 @@ public class BookCharge {
     private Long id;
 
     private LocalDateTime time;
+    private double cost;
+  
 
-    private int duration; //minutos/horas
-
-    private String status;
+    private int duration;  
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status; 
 
     @ManyToOne
     @JoinColumn(name = "user_id")

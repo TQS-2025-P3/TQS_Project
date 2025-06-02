@@ -13,7 +13,7 @@ services:
       MYSQL_USER: Evera_staff
       MYSQL_PASSWORD: senha1234
     volumes:
-      - mysql_data:/var/lib/mysql
+    - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p=rootpass"]
       interval: 10s

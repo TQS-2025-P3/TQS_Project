@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Stations from './pages/Stations';
 import Profile from './pages/Profile';
 import MapPage from './pages/MapPage';
+import MyBookingsPage from './pages/MyBookingsPage';
 
 export default function App() {
   return (
@@ -15,6 +16,8 @@ export default function App() {
         <Route path="/stations" element={<Stations />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/map" element={<MapPage />} />
+        <Route path="/reservas" element={<MyBookingsPage />} />
+
         {/* Add more routes as needed */}
 
       
