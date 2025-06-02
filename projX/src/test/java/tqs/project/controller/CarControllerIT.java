@@ -1,6 +1,10 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CarController.class)
-public class CarControllerTest {
+public class CarControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,6 +35,8 @@ public class CarControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @XrayTest(key = "TQSPROJECT-401")
+    @Requirement("TQSPROJECT-468")
     @Test
     public void whenPostValidCar_thenCreateCar() throws Exception {
         // Create a valid CarDTO

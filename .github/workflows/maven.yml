@@ -102,7 +102,7 @@ jobs:
             -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} \
             -Dxray.projectKey=TQSPROJECT \
             -Dxray.reportFormat=junit \
-            -Dxray.reportFile=target/surefire-reports/TEST-*.xml \
+            -Dxray.reportFile=target/failsafe-reports/TEST-*.xml \
             app.getxray:xray-maven-plugin:import-results
 
     

@@ -6,6 +6,10 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,7 +23,7 @@ import tqs.project.model.Car;
 import java.util.Arrays;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+public class UserControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -30,6 +34,8 @@ public class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @XrayTest(key = "TQSPROJECT-398")
+    @Requirement("TQSPROJECT-468")
     @Test
     void testCreateUserSuccess() throws Exception {
         User user = new User();
@@ -46,6 +52,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Joana"));
     }
 
+    @XrayTest(key = "TQSPROJECT-399")
+    @Requirement("TQSPROJECT-468")
     @Test
     void testCreateUserInvalidEmail() throws Exception {
         User user = new User();
@@ -58,6 +66,8 @@ public class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @XrayTest(key = "TQSPROJECT-400")
+    @Requirement("TQSPROJECT-58")
     @Test
     void testGetUserWithCars() throws Exception {
         User user = new User();

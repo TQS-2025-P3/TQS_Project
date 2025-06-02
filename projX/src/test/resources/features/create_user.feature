@@ -1,3 +1,5 @@
+@requirementKey=TQSPROJECT-468
+@TQSPROJECT-404
 Feature: User creation with cars
 
   Scenario: Creating a user with multiple cars
