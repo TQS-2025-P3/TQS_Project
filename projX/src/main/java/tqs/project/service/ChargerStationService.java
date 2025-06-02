@@ -27,14 +27,16 @@ public class ChargerStationService {
         Staff staff = staffRepository.findById(dto.getStaffId()).orElseThrow(() ->
             new IllegalArgumentException("Staff com ID " + dto.getStaffId() + " não existe.")
         );
-
+    
         ChargerStation station = new ChargerStation();
         station.setName(dto.getName());
         station.setLatitude(dto.getLatitude());
         station.setLongitude(dto.getLongitude());
         station.setSlots(dto.getSlots());
+        station.setPricePerKwh(dto.getPricePerKwh()); // ✅ esta linha é essencial
         station.setStaff(staff);
-
+    
         return stationRepository.save(station);
     }
+    
 }

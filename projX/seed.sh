@@ -9,6 +9,9 @@ curl -s -X POST http://localhost:8080/api/users \
     "password": "1234"
   }'
 
+# Adicionar fundos ao utilizador com id 1
+curl -s -X PATCH "http://localhost:8080/api/users/1/addFunds?amount=25.00"
+
 # Criar staff com id 1
 curl -s -X POST http://localhost:8080/api/staffs \
   -H "Content-Type: application/json" \
@@ -63,9 +66,10 @@ stations=(
   "Ponta Delgada Plug,37.7412,-25.6756,2"
 )
 
-# Inserir estações
+# Inserir estações com preço aleatório entre 0.10 e 0.50 €/kWh
 for station in "${stations[@]}"; do
   IFS=',' read -r name lat lng slots <<< "$station"
+  price=$(awk -v min=0.10 -v max=0.50 'BEGIN{srand(); printf "%.2f", min+rand()*(max-min)}')
   curl -s -X POST http://localhost:8080/api/stations \
     -H "Content-Type: application/json" \
     -d "{
@@ -73,6 +77,7 @@ for station in "${stations[@]}"; do
       \"latitude\": $lat,
       \"longitude\": $lng,
       \"slots\": $slots,
+      \"pricePerKwh\": $price,
       \"staffId\": 1
     }"
 done

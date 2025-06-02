@@ -22,5 +22,7 @@ public class User extends Person {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Car> cars;
-}
 
+    @Column(name = "balance")
+    private double balance = 0.0;
+}

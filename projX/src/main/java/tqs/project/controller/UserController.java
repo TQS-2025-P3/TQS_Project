@@ -32,4 +32,21 @@ public class UserController {
     public User getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
+
+    @PatchMapping("/{id}/addFunds")
+    public ResponseEntity<?> addFunds(@PathVariable Long id, @RequestParam double amount) {
+    try {
+        User updatedUser = userService.addFunds(id, amount);
+        return ResponseEntity.ok(updatedUser);
+    } catch (RuntimeException e) {
+        return ResponseEntity
+            .badRequest()
+            .body("Erro ao adicionar fundos: " + e.getMessage());
+    }
+}
+    @GetMapping("/{id}/balance")
+    public ResponseEntity<Double> getUserBalance(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserBalance(id));
+    }
+
 }

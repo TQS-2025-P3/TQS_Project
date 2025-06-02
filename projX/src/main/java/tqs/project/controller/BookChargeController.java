@@ -17,13 +17,23 @@ public class BookChargeController {
     @Autowired
     private BookChargeService bookingService;
 
-    @GetMapping
-    public List<BookCharge> getAllBookings() {
-        return bookingService.getAllBookings();
+    // Criar nova reserva
+    @PostMapping
+    public BookCharge createBooking(@Valid @RequestBody BookChargeDTO dto) {
+        return bookingService.createBooking(dto);
     }
 
-    @PostMapping
-    public BookCharge createBooking(@Valid @RequestBody BookChargeDTO bookingDTO) {
-        return bookingService.createBooking(bookingDTO);
+    // Obter todas as reservas de um utilizador
+    @GetMapping("/user/{userId}")
+    public List<BookCharge> getBookingsByUser(@PathVariable Long userId) {
+        return bookingService.getBookingsByUser(userId);
     }
+
+    // Atualizar status de uma reserva (ex: COMPLETED ou CANCELLED)
+    @PatchMapping("/{id}/status")
+    public BookCharge updateBookingStatus(@PathVariable Long id, @RequestParam String status) {
+        return bookingService.updateStatus(id, status);
+    }
+
+    
 }
