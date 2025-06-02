@@ -101,8 +101,7 @@ jobs:
             -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
             -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} \
             -Dxray.projectKey=TQSPROJECT \
-            -Dxray.reportFormat=junit \
-            -Dxray.reportFile=target/failsafe-reports/TEST-*.xml \
+            -Dxray.reportFormat=xray \
             app.getxray:xray-maven-plugin:import-results
 
     
