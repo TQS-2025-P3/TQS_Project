@@ -207,8 +207,7 @@
                     <configuration>
                         <cloud>true</cloud>                     
                         <projectKey>TQSPROJECT</projectKey>
-                        <reportFormat>junit</reportFormat>
-                        <reportFile>target/failsafe-reports/TEST-*.xml</reportFile>
+                        <reportFormat>xray</reportFormat>
                     </configuration>
 			</plugin>   
         </plugins>
