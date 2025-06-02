@@ -26,6 +26,10 @@ public class ChargerStation {
     @Column(name = "slots_in_use")
     private int slotsInUse;
 
+    @Column(name = "price_per_kwh")
+    private double pricePerKwh;
+
+
     @ManyToOne
     @JoinColumn(name = "staff_id")
     @JsonBackReference
@@ -35,4 +39,6 @@ public class ChargerStation {
     public int getAvailableSlots() {
         return slots - slotsInUse;
     }
+
+
 }

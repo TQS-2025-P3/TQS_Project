@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import {
   Container, Typography, CircularProgress, Dialog, DialogTitle,
-  DialogContent, DialogActions, Button, RadioGroup, FormControlLabel, Radio
+  DialogContent, DialogActions, Button, RadioGroup, FormControlLabel, Radio, Slider 
 } from '@mui/material';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -28,6 +29,10 @@ export default function MapPage() {
   const [userBalance, setUserBalance] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [maxPrice, setMaxPrice] = useState(0.40); 
+  const [minSlots, setMinSlots] = useState(1); 
+
+
 
 
 
@@ -54,8 +59,11 @@ export default function MapPage() {
   }, [selectedCarId, vehicles]);
 
   const calculateCost = () => {
-    return selectedCar ? (selectedCar.batteryCapacity * 0.10).toFixed(2) : "0.00";
+    if (!selectedCar || !selectedStation) return "0.00";
+    const price = selectedStation.pricePerKwh || 0.10;
+    return (selectedCar.batteryCapacity * price).toFixed(2);
   };
+  
 
   const handleReserve = async (station) => {
     setSelectedStation(station);
@@ -110,8 +118,9 @@ export default function MapPage() {
       setReservationDetails({
         station: result.chargerStation.name,
         vehicle: `${result.car.brand} ${result.car.model}`,
-        cost: (result.car.batteryCapacity * 0.10).toFixed(2)
+        cost: (result.car.batteryCapacity * result.chargerStation.pricePerKwh).toFixed(2)
       });
+      
   
       const userRes = await fetch(`http://localhost:8080/api/users/${userId}`);
       const userData = await userRes.json();
@@ -140,6 +149,41 @@ export default function MapPage() {
         Clique numa estação para ver mais detalhes e reservar.
       </Typography>
   
+      {/* Filtro por preço máximo */}
+      <div style={{ marginBottom: '1.5rem', maxWidth: 300 }}>
+  <Typography gutterBottom>Preço máximo por kWh: {maxPrice.toFixed(2)} €</Typography>
+  <Slider
+    value={maxPrice}
+    min={0}
+    max={0.60}
+    step={0.01}
+    onChange={(e, newValue) => setMaxPrice(newValue)}
+    valueLabelDisplay="auto"
+    marks={[
+      { value: 0, label: '0 €' },
+      { value: 0.3, label: '0.30 €' },
+      { value: 0.6, label: '0.60 €' }
+    ]}
+    sx={{ color: '#1976d2' }}
+  />
+
+  <Typography gutterBottom sx={{ mt: 3 }}>
+    Mínimo de slots disponíveis: {minSlots}
+  </Typography>
+  <Slider
+    value={minSlots}
+    min={0}
+    max={5}
+    step={1}
+    onChange={(e, newValue) => setMinSlots(newValue)}
+    valueLabelDisplay="auto"
+    marks
+    sx={{ color: '#388e3c' }}
+  />
+</div>
+
+
+  
       {loading ? (
         <CircularProgress />
       ) : (
@@ -149,33 +193,39 @@ export default function MapPage() {
               attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {stations.map((station) => (
-              <Marker key={station.id} position={[station.latitude, station.longitude]}>
-                <Popup>
-                  <strong>{station.name}</strong><br />
-                  Slots disponíveis: {station.availableSlots}<br />
-                  <button
-                    style={{
-                      marginTop: '8px',
-                      padding: '6px 12px',
-                      backgroundColor: '#1976d2',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '4px',
-                      cursor: 'pointer'
-                    }}
-                    onClick={() => handleReserve(station)}
-                  >
-                    Reservar
-                  </button>
-                </Popup>
-              </Marker>
-            ))}
+            {stations
+  .filter(station =>
+    station.pricePerKwh <= maxPrice &&
+    station.availableSlots >= minSlots
+  )
+              .map((station) => (
+                <Marker key={station.id} position={[station.latitude, station.longitude]}>
+                  <Popup>
+                    <strong>{station.name}</strong><br />
+                    Preço: {station.pricePerKwh.toFixed(2)} €/kWh<br />
+                    Slots disponíveis: {station.availableSlots}<br />
+                    <button
+                      style={{
+                        marginTop: '8px',
+                        padding: '6px 12px',
+                        backgroundColor: '#1976d2',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => handleReserve(station)}
+                    >
+                      Reservar
+                    </button>
+                  </Popup>
+                </Marker>
+              ))}
           </MapContainer>
         </div>
       )}
   
-      
+      {/* Modal seleção de carro */}
       <Dialog open={modalOpen} onClose={() => setModalOpen(false)}>
         <DialogTitle>Escolha um veículo</DialogTitle>
         <DialogContent>
@@ -209,7 +259,7 @@ export default function MapPage() {
         </DialogActions>
       </Dialog>
   
-      
+      {/* Dialog de sucesso */}
       <Dialog open={successDialogOpen} onClose={() => setSuccessDialogOpen(false)}>
         <DialogTitle>Reserva efetuada com sucesso!</DialogTitle>
         <DialogContent>
@@ -227,7 +277,7 @@ export default function MapPage() {
         </DialogActions>
       </Dialog>
   
-      
+      {/* Dialog de erro */}
       <Dialog open={errorDialogOpen} onClose={() => setErrorDialogOpen(false)}>
         <DialogTitle sx={{ color: 'error.main' }}>Erro na Reserva</DialogTitle>
         <DialogContent>
@@ -239,6 +289,7 @@ export default function MapPage() {
       </Dialog>
     </Container>
   );
+  
   
   
 }

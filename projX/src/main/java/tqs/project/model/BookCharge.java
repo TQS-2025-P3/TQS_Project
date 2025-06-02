@@ -18,7 +18,9 @@ public class BookCharge {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDateTime time;  
+    private LocalDateTime time;
+    private double cost;
+  
 
     private int duration;  
     @Enumerated(EnumType.STRING)

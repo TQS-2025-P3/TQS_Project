@@ -35,13 +35,12 @@ public class BookChargeService {
         ChargerStation station = stationRepository.findById(dto.getStationId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Estação não encontrada"));
     
-        // Verificar saldo suficiente
-        double cost = car.getBatteryCapacity() * 0.10;
+        double cost = car.getBatteryCapacity() * station.getPricePerKwh();
+    
         if (user.getBalance() < cost) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Saldo insuficiente");
         }
     
-        // Verificar reserva duplicada com o mesmo carro
         List<BookCharge> existing = bookChargeRepository.findByCarIdAndStatus(dto.getCarId(), BookingStatus.RESERVED);
         if (!existing.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe uma reserva ativa para este veículo");
@@ -51,7 +50,6 @@ public class BookChargeService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Não há slots disponíveis na estação selecionada");
         }
     
-        // Criar reserva
         BookCharge booking = new BookCharge();
         booking.setUser(user);
         booking.setCar(car);
@@ -59,6 +57,7 @@ public class BookChargeService {
         booking.setDuration(dto.getDuration());
         booking.setTime(LocalDateTime.now());
         booking.setStatus(BookingStatus.RESERVED);
+        booking.setCost(cost); // 👈 novo
     
         station.setSlotsInUse(station.getSlotsInUse() + 1);
         stationRepository.save(station);
@@ -68,6 +67,7 @@ public class BookChargeService {
     
         return bookChargeRepository.save(booking);
     }
+    
     
 
     public List<BookCharge> getBookingsByUser(Long userId) {
