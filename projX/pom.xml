@@ -208,6 +208,7 @@
                         <cloud>true</cloud>                     
                         <projectKey>TQSPROJECT</projectKey>
                         <reportFormat>xray</reportFormat>
+                        <reportFile></reportFile>
                     </configuration>
 			</plugin>   
         </plugins>
