@@ -205,7 +205,7 @@
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.8.0</version>
                     <configuration>
-                        <cloud>true</cloud>                     
+                        <cloud>true</cloud>  
                         <projectKey>TQSPROJECT</projectKey>
                         <reportFormat>xray</reportFormat>
                         <reportFile></reportFile>
