@@ -208,7 +208,7 @@
                         <cloud>true</cloud>  
                         <projectKey>TQSPROJECT</projectKey>
                         <reportFormat>xray</reportFormat>
-                        <reportFile></reportFile>
+                        <reportFile>reports/TEST-*.xml</reportFile>
                     </configuration>
 			</plugin>   
         </plugins>
