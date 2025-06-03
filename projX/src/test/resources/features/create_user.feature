@@ -1,6 +1,6 @@
+@requirementKey=TQSPROJECT-468
 Feature: User creation with cars
 
-  @requirementKey=TQSPROJECT-468
   Scenario: Creating a user with multiple cars
     Given a user named "Joana" with email "joana@example.com" and password "admin123"
     And the user owns the following cars:
