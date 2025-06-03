@@ -35,7 +35,6 @@ public class CarControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @XrayTest(key = "TQSPROJECT-401")
     @Requirement("TQSPROJECT-468")
     @Test
     public void whenPostValidCar_thenCreateCar() throws Exception {

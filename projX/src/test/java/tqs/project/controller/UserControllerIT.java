@@ -34,7 +34,6 @@ public class UserControllerIT {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @XrayTest(key = "TQSPROJECT-398")
     @Requirement("TQSPROJECT-468")
     @Test
     void testCreateUserSuccess() throws Exception {
@@ -52,7 +51,6 @@ public class UserControllerIT {
                 .andExpect(jsonPath("$.name").value("Joana"));
     }
 
-    @XrayTest(key = "TQSPROJECT-399")
     @Requirement("TQSPROJECT-468")
     @Test
     void testCreateUserInvalidEmail() throws Exception {
@@ -66,7 +64,6 @@ public class UserControllerIT {
                 .andExpect(status().isBadRequest());
     }
 
-    @XrayTest(key = "TQSPROJECT-400")
     @Requirement("TQSPROJECT-58")
     @Test
     void testGetUserWithCars() throws Exception {
