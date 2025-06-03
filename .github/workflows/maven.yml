@@ -58,17 +58,11 @@ jobs:
           sleep 2
         done
 
-    - name: Run tests
-      working-directory: projX
-      run: mvn test -Djava.version=${{ matrix.java }}
-
-    - name: Package app
-      working-directory: projX
-      run: mvn package -DskipTests -Djava.version=${{ matrix.java }}
-
+    - name: Build and run unit tests
+      run: mvn -B package --file pom.xml
+      
     - name: Run integration tests
-      working-directory: projX
-      run: mvn -B integration-test verify --file pom.xml -Djava.version=${{ matrix.java }}
+      run: mvn -B integration-test verify --file pom.xml
 
     - name: Print test logs on failure
       if: failure()
