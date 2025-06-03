@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
-import app.getxray.xray.junit.customjunitxml.annotations.XrayTest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
