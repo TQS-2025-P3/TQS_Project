@@ -206,6 +206,10 @@
 				<groupId>app.getxray</groupId>
 				<artifactId>xray-maven-plugin</artifactId>
 				<version>0.8.0</version>
+                <configuration>
+					<cloud>true</cloud>
+					<projectKey>TQSPROJECT</projectKey>
+                </configuration>
 			</plugin>   
         </plugins>
     </build>
