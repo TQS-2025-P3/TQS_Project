@@ -207,7 +207,7 @@
                     <configuration>
                         <cloud>true</cloud>  
                         <projectKey>TQSPROJECT</projectKey>
-                        <reportFormat>xray</reportFormat>
+                        <reportFormat>junit</reportFormat>
                         <reportFile>reports/TEST-*.xml</reportFile>
                     </configuration>
 			</plugin>   
