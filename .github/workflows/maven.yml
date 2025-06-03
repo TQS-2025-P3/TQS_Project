@@ -59,9 +59,11 @@ jobs:
         done
 
     - name: Build and run unit tests
+      working-directory: projX
       run: mvn -B package --file pom.xml
-      
+
     - name: Run integration tests
+      working-directory: projX
       run: mvn -B integration-test verify --file pom.xml
 
     - name: Print test logs on failure
@@ -115,7 +117,7 @@ jobs:
             -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} \
             -Dxray.projectKey=TQSPROJECT \
             -Dxray.reportFormat=cucumber \
-            -Dxray.reportFile=target/reports/TEST-cucumber.json \
+            -Dxray.reportFile=target/reports/cucumber.json \
             app.getxray:xray-maven-plugin:import-results
 
     
