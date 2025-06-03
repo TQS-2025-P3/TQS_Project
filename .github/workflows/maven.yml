@@ -118,10 +118,12 @@ jobs:
     - name: Authenticate with Xray Cloud
       working-directory: projX
       run: |
-        echo "XRAY_TOKEN=$(curl -s -H \"Content-Type: application/json\" \
+        echo "Obtaining token..."
+        token=$(curl -s -H "Content-Type: application/json" \
           -X POST \
-          --data '{\"client_id\":\"${{ secrets.XRAYCLOUD_CLIENT_ID }}\",\"client_secret\":\"${{ secrets.XRAYCLOUD_CLIENT_SECRET }}\"}' \
-          https://xray.cloud.getxray.app/api/v2/authenticate | tr -d '\"')" >> $GITHUB_ENV
+          --data "{\"client_id\":\"${{ secrets.XRAYCLOUD_CLIENT_ID }}\",\"client_secret\":\"${{ secrets.XRAYCLOUD_CLIENT_SECRET }}\"}" \
+          https://xray.cloud.getxray.app/api/v2/authenticate | tr -d '"')
+        echo "XRAY_TOKEN=$token" >> $GITHUB_ENV
 
     - name: Upload Cucumber results to Xray Cloud (multipart)
       working-directory: projX
