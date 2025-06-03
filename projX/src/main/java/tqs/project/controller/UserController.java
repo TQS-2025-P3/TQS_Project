@@ -49,4 +49,21 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserBalance(id));
     }
 
+    
+
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+        return userService.updateUser(id, userDTO);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        try {
+            userService.deleteUser(id);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

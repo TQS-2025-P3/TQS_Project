@@ -39,7 +39,7 @@ public class UserService {
                 car.setModel(carDTO.getModel());
                 car.setPlate(carDTO.getPlate());
                 car.setBatteryCapacity(carDTO.getBatteryCapacity());
-                car.setOwner(user); // associação com o novo user
+                car.setOwner(user);
                 cars.add(car);
             }
             user.setCars(cars);
@@ -49,33 +49,37 @@ public class UserService {
     }
 
     public User updateUser(Long id, UserDTO userDTO) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.setName(userDTO.getName());
-            user.setEmail(userDTO.getEmail());
-            user.setPassword(userDTO.getPassword());
+        User existingUser = userRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Utilizador com ID " + id + " não encontrado."));
 
-            if (userDTO.getCars() != null) {
-                List<Car> cars = new ArrayList<>();
-                for (CarDTO carDTO : userDTO.getCars()) {
-                    Car car = new Car();
-                    car.setBrand(carDTO.getBrand());
-                    car.setModel(carDTO.getModel());
-                    car.setPlate(carDTO.getPlate());
-                    car.setBatteryCapacity(carDTO.getBatteryCapacity());
-                    car.setOwner(user); // associação com o user atualizado
-                    cars.add(car);
-                }
-                user.setCars(cars);
-            }
-
-            return userRepository.save(user);
+        existingUser.setName(userDTO.getName());
+        existingUser.setEmail(userDTO.getEmail());
+        
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
+            existingUser.setPassword(userDTO.getPassword());
         }
-        return null;
+
+        if (userDTO.getBalance() != null) {
+            existingUser.setBalance(userDTO.getBalance());
+        }
+
+        if (userDTO.getCars() != null) {
+            List<Car> cars = new ArrayList<>();
+            for (CarDTO carDTO : userDTO.getCars()) {
+                Car car = new Car();
+                car.setBrand(carDTO.getBrand());
+                car.setModel(carDTO.getModel());
+                car.setPlate(carDTO.getPlate());
+                car.setBatteryCapacity(carDTO.getBatteryCapacity());
+                car.setOwner(existingUser);
+                cars.add(car);
+            }
+            existingUser.setCars(cars);
+        }
+
+        return userRepository.save(existingUser);
     }
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
-    }
+   
     public List<Car> getCarsByUserId(Long userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
@@ -100,5 +104,12 @@ public class UserService {
         User user = userRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Utilizador não encontrado"));
         return user.getBalance();
+    }
+    
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("Utilizador com ID " + id + " não encontrado.");
+        }
+        userRepository.deleteById(id);
     }
 }
