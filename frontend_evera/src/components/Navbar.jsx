@@ -34,6 +34,7 @@ export default function Navbar() {
         <Button color="inherit" component={Link} to="/profile">Perfil</Button>
         <Button color="inherit" component={Link} to="/map">Mapa</Button>
         <Button color="inherit" component={Link} to="/reservas">Minhas Reservas</Button>
+        <Button color="inherit" component={Link} to="/admin">Admin</Button>
 
         {user && (
           <Box sx={{ ml: 2 }}>

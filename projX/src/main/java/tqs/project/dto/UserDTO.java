@@ -16,6 +16,8 @@ public class UserDTO {
     @NotBlank(message = "A palavra-passe é obrigatória.")
     private String password;
 
+    private Double balance;
+
     private List<CarDTO> cars;
 
     public UserDTO() {}
@@ -38,4 +40,10 @@ public class UserDTO {
 
     public List<CarDTO> getCars() { return cars; }
     public void setCars(List<CarDTO> cars) { this.cars = cars; }
+
+
+    public Double getBalance() { return balance; }
+    public void setBalance(Double balance) { this.balance = balance; }
 }
+
+
