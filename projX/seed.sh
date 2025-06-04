@@ -3,20 +3,20 @@
 echo "📦 A semear dados no backend..."
 
 # --- Utilizador principal ---
-curl -s -X POST http://localhost:8080/api/users \
+curl -s -X POST http://springapp:8080/api/users \
   -H "Content-Type: application/json" \
   -d '{"name": "Pedro", "email": "pedro@example.com", "password": "1234"}'
 
-curl -s -X PATCH "http://localhost:8080/api/users/1/addFunds?amount=25.00"
+curl -s -X PATCH "http://springapp:8080/api/users/1/addFunds?amount=25.00"
 
 # --- Staff ---
-curl -s -X POST http://localhost:8080/api/staffs \
+curl -s -X POST http://springapp:8080/api/staffs \
   -H "Content-Type: application/json" \
   -d '{"name": "Maria Silva", "email": "maria.silva@example.com", "password": "segredo123"}'
 
 # --- Carros do Pedro ---
-curl -s -X POST http://localhost:8080/api/cars -H "Content-Type: application/json" -d '{"brand":"Tesla","model":"Model S","plate":"00-AA-11","batteryCapacity":100,"userId":1}'
-curl -s -X POST http://localhost:8080/api/cars -H "Content-Type: application/json" -d '{"brand":"Nissan","model":"Leaf","plate":"11-BB-22","batteryCapacity":40,"userId":1}'
+curl -s -X POST http://springapp:8080/api/cars -H "Content-Type: application/json" -d '{"brand":"Tesla","model":"Model S","plate":"00-AA-11","batteryCapacity":100,"userId":1}'
+curl -s -X POST http://springapp:8080/api/cars -H "Content-Type: application/json" -d '{"brand":"Nissan","model":"Leaf","plate":"11-BB-22","batteryCapacity":40,"userId":1}'
 
 # --- Estações ---
 stations=(
@@ -28,7 +28,7 @@ stations=(
 for station in "${stations[@]}"; do
   IFS=',' read -r name lat lng slots <<< "$station"
   price=$(awk -v min=0.10 -v max=0.50 'BEGIN{srand(); printf "%.2f", min+rand()*(max-min)}')
-  curl -s -X POST http://localhost:8080/api/stations \
+  curl -s -X POST http://springapp:8080/api/stations \
     -H "Content-Type: application/json" \
     -d "{
       \"name\": \"$name\",
@@ -42,13 +42,13 @@ done
 
 # --- Outros Utilizadores + carros + fundos ---
 for i in {2..4}; do
-  curl -s -X POST http://localhost:8080/api/users \
+  curl -s -X POST http://springapp:8080/api/users \
     -H "Content-Type: application/json" \
     -d "{\"name\":\"User$i\",\"email\":\"user$i@example.com\",\"password\":\"pw$i\"}"
 
-  curl -s -X PATCH "http://localhost:8080/api/users/$i/addFunds?amount=50.00"
+  curl -s -X PATCH "http://springapp:8080/api/users/$i/addFunds?amount=50.00"
 
-  curl -s -X POST http://localhost:8080/api/cars \
+  curl -s -X POST http://springapp:8080/api/cars \
     -H "Content-Type: application/json" \
     -d "{
       \"brand\": \"Brand$i\",
@@ -59,7 +59,7 @@ for i in {2..4}; do
     }"
 done
 
-curl -X POST http://localhost:8080/api/bookings \
+curl -X POST http://springapp:8080/api/bookings \
   -H "Content-Type: application/json" \
   -d '{
     "userId": 2,
@@ -68,7 +68,7 @@ curl -X POST http://localhost:8080/api/bookings \
     "duration": 60
   }'
 
-curl -X POST http://localhost:8080/api/bookings \
+curl -X POST http://springapp:8080/api/bookings \
   -H "Content-Type: application/json" \
   -d '{
     "userId": 1,
@@ -77,7 +77,7 @@ curl -X POST http://localhost:8080/api/bookings \
     "duration": 60
   }'
 
-curl -X POST http://localhost:8080/api/bookings \
+curl -X POST http://springapp:8080/api/bookings \
   -H "Content-Type: application/json" \
   -d '{
     "userId": 3,
@@ -115,7 +115,7 @@ stations=(
 for station in "${stations[@]}"; do
   IFS=',' read -r name lat lng slots <<< "$station"
   price=$(awk -v min=0.10 -v max=0.50 'BEGIN{srand(); printf "%.2f", min+rand()*(max-min)}')
-  curl -s -X POST http://localhost:8080/api/stations \
+  curl -s -X POST http://springapp:8080/api/stations \
     -H "Content-Type: application/json" \
     -d "{
       \"name\": \"$name\",

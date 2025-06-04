@@ -32,6 +32,38 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Evera?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: Evera_staff
       SPRING_DATASOURCE_PASSWORD: senha1234
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend_evera
+      dockerfile: Dockerfile
+    container_name: frontend_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - springapp
+
+ 
+
+ 
+
+  seeding:
+    image: curlimages/curl:latest
+    container_name: seed_data
+    user: root 
+    depends_on:
+      springapp:
+        condition: service_healthy
+    entrypoint: [ "sh", "-c", "apk add --no-cache bash && bash /app/seed.sh" ]
+    volumes:
+      - ./:/app
+
+
 
 volumes:
   mysql_data:
