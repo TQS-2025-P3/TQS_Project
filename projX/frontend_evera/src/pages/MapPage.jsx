@@ -29,7 +29,7 @@ export default function MapPage() {
   const [userBalance, setUserBalance] = useState(null);
   const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [maxPrice, setMaxPrice] = useState(0.40); 
+  const [maxPrice, setMaxPrice] = useState(0.30); 
   const [minSlots, setMinSlots] = useState(1); 
 
 
@@ -172,7 +172,7 @@ export default function MapPage() {
   </Typography>
   <Slider
     value={minSlots}
-    min={0}
+    min={1}
     max={5}
     step={1}
     onChange={(e, newValue) => setMinSlots(newValue)}
