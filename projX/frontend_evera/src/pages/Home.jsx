@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { 
   Container, 
@@ -43,6 +42,7 @@ export default function Home() {
   const [totalStats, setTotalStats] = useState({});
   
   const userId = 1; 
+
   useEffect(() => {
     fetchUserStatistics();
   }, []);
@@ -51,22 +51,20 @@ export default function Home() {
     try {
       setLoading(true);
       
-      console.log('Buscando carros do utilizador', userId);
+      console.log('A procurar carros do utilizador', userId);
       const carsResponse = await fetch(`http://localhost:8080/api/cars/user/${userId}`);
       const cars = await carsResponse.json();
-      console.log('Carros encontrados:', cars);
       
       console.log('Buscando bookings do utilizador', userId);
       const bookingsResponse = await fetch(`http://localhost:8080/api/bookings/user/${userId}`);
       const bookings = await bookingsResponse.json();
-      console.log('Bookings encontrados:', bookings);
       
       processMonthlyConsumption(bookings);
       processVehicleCharges(bookings, cars);
       calculateTotalStats(bookings);
       
     } catch (err) {
-      console.error('Erro ao buscar estatísticas:', err);
+      console.error('Erro ao dar fetch das estatísticas:', err);
       setError('Erro ao carregar estatísticas');
     } finally {
       setLoading(false);
@@ -126,7 +124,7 @@ export default function Home() {
       if (booking.status === 'COMPLETED' && booking.car && vehicleData[booking.car.id]) {
         const date = new Date(booking.time);
         const year = date.getFullYear();
-        const month = date.getMonth(); 
+        const month = date.getMonth(); // 0-11
         
         if (year === 2025) {
           const monthNames = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 
@@ -164,14 +162,14 @@ export default function Home() {
       totalCharges: completedBookings.length,
       totalCost: Math.round(totalCost * 100) / 100,
       totalKwh: Math.round(totalKwh * 10) / 10,
-      totalTime: Math.round(totalTime / 60 * 10) / 10,
+      totalTime: Math.round(totalTime / 60 * 10) / 10, 
     });
   };
 
   const cards = [
     {
       title: 'Meus Veículos',
-      description: 'Consulta ou adiciona os teus veículos elétricos',
+      description: 'Consulte ou adicione os seus veículos elétricos',
       icon: <CarIcon sx={{ fontSize: 40 }} />,
       color: '#1976d2',
       route: '/profile',
@@ -179,7 +177,7 @@ export default function Home() {
     },
     {
       title: 'Estações de Carregamento',
-      description: 'Consulta todas as estações disponíveis',
+      description: 'Consulte todas as estações disponíveis',
       icon: <StationIcon sx={{ fontSize: 40 }} />,
       color: '#2e7d32',
       route: '/stations',
@@ -187,7 +185,7 @@ export default function Home() {
     },
     {
       title: 'Mapa Interativo',
-      description: 'Visualiza as estações no mapa',
+      description: 'Visualize as estações no mapa',
       icon: <MapIcon sx={{ fontSize: 40 }} />,
       color: '#ed6c02',
       route: '/map',
@@ -273,7 +271,7 @@ export default function Home() {
       {!loading && !error && (
         <Box mt={8} textAlign="center">
           <Typography variant="h5" gutterBottom color="primary">
-            Estatísticas Gerais
+            Estatísticas Pessoais
           </Typography>
           <Grid container spacing={4} sx={{ mt: 2 }}>
             <Grid size={{ xs: 12, sm: 3 }}>
@@ -306,7 +304,7 @@ export default function Home() {
             <Grid size={{ xs: 12, lg: 4 }}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                  Consumo Mensal (kWh & €)
+                  💡 Consumo Mensal (kWh & €)
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={monthlyConsumption}>
@@ -399,7 +397,7 @@ export default function Home() {
       {loading && (
         <Box mt={6} textAlign="center">
           <CircularProgress />
-          <Typography sx={{ mt: 2 }}>Carregando estatísticas...</Typography>
+          <Typography sx={{ mt: 2 }}>A Carregar estatísticas...</Typography>
         </Box>
       )}
 
@@ -411,16 +409,3 @@ export default function Home() {
     </Container>
   );
 }
-=======
-import React from 'react';
-import { Container, Typography } from '@mui/material';
-
-export default function Home() {
-  return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>Bem-vindo ao Evera</Typography>
-      <Typography>Plataforma inteligente para procura e gestão de carregamentos de veículos elétricos.</Typography>
-    </Container>
-  );
-}
->>>>>>> 67b1d5125970a3fd8f0925bea83c8a52ad598ccb
