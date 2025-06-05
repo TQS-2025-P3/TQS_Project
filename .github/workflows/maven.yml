@@ -83,6 +83,16 @@ jobs:
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
+    - name: Analyze with SonarCloud
+      working-directory: projX
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectKey=TQS-2025-P3_TQS_Project \
+            -Dsonar.organization=tqs-2025-p3 \
+            -Dsonar.host.url=https://sonarcloud.io
+
     - name: Push JUnit results to Xray on Jira Cloud
       if: always()
       working-directory: projX
