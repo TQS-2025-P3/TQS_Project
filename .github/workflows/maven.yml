@@ -101,34 +101,23 @@ jobs:
             -Dxray.reportFile=reports/TEST-junit-jupiter.xml \
             app.getxray:xray-maven-plugin:import-results
 
-        
-    - name: Generate metadata for Cucumber execution
+    - name: Push Cucumber results to Xray on Jira Cloud
+      if: always()
       working-directory: projX
+      env:
+        XRAYCLOUD_CLIENT_ID: ${{ secrets.XRAYCLOUD_CLIENT_ID }}
+        XRAYCLOUD_CLIENT_SECRET: ${{ secrets.XRAYCLOUD_CLIENT_SECRET }}
+        XRAYCLOUD_TEST_PLAN_KEY: ${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}
+        REVISION: ${{ github.ref_name }}
       run: |
-        echo '{
-          "fields": {
-            "project": { "key": "TQSPROJECT" },
-            "summary": "Cucumber execution from GitHub Actions",
-            "issuetype": { "name": "Test Execution" },
-            "testPlanKey": "'"${{ vars.XRAYCLOUD_TEST_PLAN_KEY }}"'",
-            "testEnvironments": ["java${{ matrix.java }}"]
-          }
-        }' > test_exec_cucumber.json
+          mvn \
+            -Dxray.clientId=${{ env.XRAYCLOUD_CLIENT_ID }} \
+            -Dxray.clientSecret=${{ env.XRAYCLOUD_CLIENT_SECRET }} \
+            -Dxray.testPlanKey=${{ env.XRAYCLOUD_TEST_PLAN_KEY }} \
+            -Dxray.projectKey=TQSPROJECT \
+            -Dxray.reportFormat=junit \
+            -Dxray.reportFile=reports/cucumber.xml \
+            app.getxray:xray-maven-plugin:import-results
 
-    - name: Authenticate with Xray Cloud
-      run: |
-        echo "Obtaining token..."
-        echo token=$(curl -s -H "Content-Type: application/json" \
-          -X POST \
-          --data "{\"client_id\":\"${{ secrets.XRAYCLOUD_CLIENT_ID }}\",\"client_secret\":\"${{ secrets.XRAYCLOUD_CLIENT_SECRET }}\"}" \
-          https://xray.cloud.getxray.app/api/v2/authenticate | tr -d '"') >> $GITHUB_ENV
-
-    - name: Upload Cucumber results to Xray Cloud (multipart)
-      working-directory: projX
-      run: |
-        curl -X POST https://xray.cloud.getxray.app/api/v2/import/execution/cucumber/multipart \
-          -H "Authorization: Bearer ${{ env.token }}" \
-          -F info=@test_exec_cucumber.json \
-          -F results=@reports/cucumber.json
 
     
