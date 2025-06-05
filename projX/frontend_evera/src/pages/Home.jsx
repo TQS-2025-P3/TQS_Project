@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { 
   Container, 
@@ -410,3 +411,16 @@ export default function Home() {
     </Container>
   );
 }
+=======
+import React from 'react';
+import { Container, Typography } from '@mui/material';
+
+export default function Home() {
+  return (
+    <Container sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>Bem-vindo ao Evera</Typography>
+      <Typography>Plataforma inteligente para procura e gestão de carregamentos de veículos elétricos.</Typography>
+    </Container>
+  );
+}
+>>>>>>> 67b1d5125970a3fd8f0925bea83c8a52ad598ccb
