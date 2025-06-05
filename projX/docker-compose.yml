@@ -13,7 +13,7 @@ services:
       MYSQL_USER: Evera_staff
       MYSQL_PASSWORD: senha1234
     volumes:
-      - mysql_data:/var/lib/mysql
+    - mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p=rootpass"]
       interval: 10s
@@ -32,6 +32,62 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/Evera?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: Evera_staff
       SPRING_DATASOURCE_PASSWORD: senha1234
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend_evera
+      dockerfile: Dockerfile
+    container_name: frontend_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - springapp
+
+ 
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    command:
+      - --web.enable-remote-write-receiver
+      - --enable-feature=native-histograms
+      - --config.file=/etc/prometheus/prometheus.yaml
+
+    volumes:
+    - ./config/prometheus.yaml:/etc/prometheus/prometheus.yaml
+
+  grafana:
+    image: grafana/grafana:latest
+    restart: always
+    ports:
+      - 3001:3000
+    environment:
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_BASIC_ENABLED=false
+    volumes:
+      - ./config/grafana:/etc/grafana/provisioning/
+
+
+
+  seeding:
+    image: curlimages/curl:latest
+    container_name: seed_data
+    user: root 
+    depends_on:
+      springapp:
+        condition: service_healthy
+    entrypoint: [ "sh", "-c", "apk add --no-cache bash && bash /app/seed.sh" ]
+    volumes:
+      - ./:/app
+
+
 
 volumes:
   mysql_data:

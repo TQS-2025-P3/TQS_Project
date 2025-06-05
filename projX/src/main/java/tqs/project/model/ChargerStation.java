@@ -17,10 +17,28 @@ public class ChargerStation {
     private Long id;
 
     private String name;
-    private String location;
+
+    private double latitude;
+    private double longitude;
+
+    private int slots;
+
+    @Column(name = "slots_in_use")
+    private int slotsInUse;
+
+    @Column(name = "price_per_kwh")
+    private double pricePerKwh;
+
 
     @ManyToOne
     @JoinColumn(name = "staff_id")
     @JsonBackReference
     private Staff staff;
+
+    @Transient
+    public int getAvailableSlots() {
+        return slots - slotsInUse;
+    }
+
+
 }

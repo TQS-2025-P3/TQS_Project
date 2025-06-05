@@ -125,6 +125,13 @@
 			<scope>test</scope>
 		</dependency>
 
+          <!-- Acurator HealthCheck -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+
         <!-- DevTools -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

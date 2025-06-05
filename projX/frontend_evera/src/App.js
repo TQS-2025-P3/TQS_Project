@@ -5,6 +5,9 @@ import Home from './pages/Home';
 import Stations from './pages/Stations';
 import Profile from './pages/Profile';
 import MapPage from './pages/MapPage';
+import MyBookingsPage from './pages/MyBookingsPage';
+import AdminBackoffice from './pages/AdminBackoffice';
+
 
 export default function App() {
   return (
@@ -15,7 +18,10 @@ export default function App() {
         <Route path="/stations" element={<Stations />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/map" element={<MapPage />} />
-        {/* Add more routes as needed */}
+        <Route path="/reservas" element={<MyBookingsPage />} />
+        <Route path="/admin" element={<AdminBackoffice />} />
+
+        
 
       
 
