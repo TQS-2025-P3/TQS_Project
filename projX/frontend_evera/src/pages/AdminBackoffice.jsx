@@ -25,12 +25,14 @@ import {
   CardContent,
   Grid
 } from '@mui/material';
+
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
   Visibility as ViewIcon
 } from '@mui/icons-material';
+import StatisticsPage from './StatisticsPage';
 
 const AdminBackoffice = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -84,11 +86,13 @@ const AdminBackoffice = () => {
         <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
           <Tab label="Estações de Carregamento" />
           <Tab label="Utilizadores" />
+          <Tab label="Estatisticas" />
         </Tabs>
         
         <Box sx={{ p: 3 }}>
           {tabValue === 0 && <StationsManagement />}
           {tabValue === 1 && <UsersManagement />}
+          {tabValue === 2 && <StatisticsPage />}
         </Box>
       </Paper>
     </Container>
@@ -255,10 +259,11 @@ const StationsManagement = () => {
                 </TableCell>
                 <TableCell>{station.slots}</TableCell>
                 <TableCell>
-                  <Chip 
-                    label={`${station.slots - station.slotsInUse}/${station.slots}`}
-                    color={station.slots - station.slotsInUse > 0 ? 'success' : 'error'}
-                  />
+                <Chip 
+                label={`${station.slots - station.slotsInUse}/${station.slots}`}
+                color={station.slots - station.slotsInUse > 0 ? 'success' : 'error'}
+                onClick={() => {}}
+                />
                 </TableCell>
                 <TableCell>€{station.pricePerKwh}</TableCell>
                 <TableCell>
@@ -479,7 +484,8 @@ const UsersManagement = () => {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>€{user.balance.toFixed(2)}</TableCell>
                 <TableCell>
-                  <Chip label={user.cars ? user.cars.length : 0} color="primary" />
+                <Chip 
+                label={user.cars ? user.cars.length : 0} color="primary" onClick={() => {}} />                
                 </TableCell>
                 <TableCell>
                   <IconButton onClick={() => { setViewingUser(user); setOpenView(true); }} color="info">
@@ -498,7 +504,6 @@ const UsersManagement = () => {
         </Table>
       </TableContainer>
 
-      {/* Dialog de Edição */}
       <Dialog open={openEdit} onClose={() => setOpenEdit(false)} maxWidth="sm" fullWidth>
         <DialogTitle>Editar Utilizador</DialogTitle>
         <DialogContent>
@@ -525,7 +530,7 @@ const UsersManagement = () => {
                 fullWidth
                 label="Saldo (€)"
                 type="number"
-                inputProps={{ step: 0.01 }}
+                inputProps={{ step: 1 }}
                 value={formData.balance}
                 onChange={(e) => setFormData({...formData, balance: e.target.value})}
               />
@@ -549,7 +554,6 @@ const UsersManagement = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Dialog de Visualização */}
       <Dialog open={openView} onClose={() => setOpenView(false)} maxWidth="md" fullWidth>
         <DialogTitle>Detalhes do Utilizador</DialogTitle>
         <DialogContent>
