@@ -378,19 +378,19 @@ main() {
 }
 
 
-if ! sudo docker ps > /dev/null 2>&1; then
+if !  docker ps > /dev/null 2>&1; then
     echo " Erro: Docker não está a rodar ou não está acessível."
     echo " Executa: sudo systemctl start docker"
     exit 1
 fi
 
-if ! sudo docker ps -a | grep -q mysql_server; then
+if !  docker ps -a | grep -q mysql_server; then
     echo " Erro: Container mysql_server não encontrado."
     echo " Executa primeiro o container MySQL do projeto."
     exit 1
 fi
 
-if ! sudo docker ps | grep -q mysql_server; then
+if !  docker ps | grep -q mysql_server; then
     echo "  Container mysql_server não está a rodar. Iniciando..."
     sudo docker start mysql_server
     sleep 3
