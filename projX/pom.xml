@@ -66,7 +66,12 @@
             <version>8.0.33</version>
             <scope>runtime</scope>
         </dependency>
-
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>5.3.2</version>
+                <scope>test</scope>
+            </dependency>
         <!-- H2 (para testes/dev local) -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -81,11 +86,13 @@
             <scope>test</scope>
         </dependency>
 
-	    <dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-	    </dependency>
+        <!-- Jackson Databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
+        <!-- Cucumber -->
         <dependency>
             <groupId>io.cucumber</groupId>
             <artifactId>cucumber-java</artifactId>
@@ -114,19 +121,38 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Xray -->
         <dependency>
-			<groupId>app.getxray</groupId>
-			<artifactId>xray-junit-extensions</artifactId>
-			<version>0.7.3</version>
-			<scope>test</scope>
-		</dependency>
-
-          <!-- Acurator HealthCheck -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>app.getxray</groupId>
+            <artifactId>xray-junit-extensions</artifactId>
+            <version>0.7.3</version>
+            <scope>test</scope>
         </dependency>
 
+        <!-- Testcontainers para testes de integração -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mysql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- WebFlux Test para testes mais robustos -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Actuator HealthCheck -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
         <!-- DevTools -->
         <dependency>
@@ -139,6 +165,7 @@
 
     <build>
         <plugins>
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -153,6 +180,7 @@
                 </configuration>
             </plugin>
 
+            <!-- Spring Boot Plugin -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -166,30 +194,73 @@
                 </configuration>
             </plugin>
 
+            <!-- Surefire Plugin (Testes Unitários) -->
             <plugin>
-      			<groupId>org.apache.maven.plugins</groupId>
-      			<artifactId>maven-surefire-plugin</artifactId>
-      			<version>3.0.0</version>
-    		</plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <!-- Incluir apenas testes unitários -->
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                        <exclude>**/*IntegrationTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
-			<plugin>
-      			<groupId>org.apache.maven.plugins</groupId>
-      			<artifactId>maven-failsafe-plugin</artifactId>
-      			<version>3.0.0</version>
-      			<executions>
-        			<execution>
-          				<goals>
-            				<goal>integration-test</goal>
-            				<goal>verify</goal>
-          				</goals>
-        			</execution>
-      			</executions>
-    		</plugin>
+            <!-- Failsafe Plugin (Testes de Integração) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <includes>
+                        <include>**/*IT.java</include>
+                        <include>**/*IntegrationTest.java</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
+            <!-- JaCoCo Plugin (Coverage) -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
+                <configuration>
+                    <excludes>
+                        <!-- Excluir Application main class -->
+                        <exclude>**/ProjectApplication.class</exclude>
+                        <!-- Excluir configurações -->
+                        <exclude>**/config/**</exclude>
+                        <!-- Excluir DTOs simples sem lógica -->
+                        <exclude>**/dto/**</exclude>
+                        <!-- Excluir classes geradas pelo Lombok -->
+                        <exclude>**/*$*</exclude>
+                    </excludes>
+                    <rules>
+                        <rule>
+                            <element>BUNDLE</element>
+                            <limits>
+                                <limit>
+                                    <counter>INSTRUCTION</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.80</minimum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -198,25 +269,98 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
+                        <phase>test</phase>
                         <goals>
                             <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>check</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
 
+            <!-- Xray Plugin -->
             <plugin>
-				<groupId>app.getxray</groupId>
-				<artifactId>xray-maven-plugin</artifactId>
-				<version>0.8.0</version>
-                    <configuration>
-                        <cloud>true</cloud>                     
-                        <projectKey>TQSPROJECT</projectKey>
-                        <reportFormat>junit</reportFormat>
-                        <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
-                    </configuration>
-			</plugin>   
+                <groupId>app.getxray</groupId>
+                <artifactId>xray-maven-plugin</artifactId>
+                <version>0.8.0</version>
+                <configuration>
+                    <cloud>true</cloud>                     
+                    <projectKey>TQSPROJECT</projectKey>
+                    <reportFormat>junit</reportFormat>
+                    <reportFile>target/surefire-reports/TEST-*.xml</reportFile>
+                </configuration>
+            </plugin>   
         </plugins>
     </build>
+
+    <!-- Profiles para diferentes ambientes de teste -->
+    <profiles>
+        <profile>
+            <id>unit-tests</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*IT.java</exclude>
+                                <exclude>**/*IntegrationTest.java</exclude>
+                                <exclude>**/*PerformanceTest.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>integration-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*IT.java</include>
+                                <include>**/*IntegrationTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>all-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <includes>
+                                <include>**/*Test.java</include>
+                                <include>**/*IT.java</include>
+                                <include>**/*IntegrationTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
