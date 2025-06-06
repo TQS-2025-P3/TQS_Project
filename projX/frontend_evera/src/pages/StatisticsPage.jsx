@@ -57,8 +57,9 @@ const StatisticsPage = () => {
   // Estados para modal
   const [showStationModal, setShowStationModal] = useState(false);
   const [tempSelectedStations, setTempSelectedStations] = useState([]);
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
-  const API_BASE_URL = 'http://localhost:8080/api';
+  const API_BASE_URL = `${baseUrl}:8080/api`;
 
   useEffect(() => {
     fetchStations();

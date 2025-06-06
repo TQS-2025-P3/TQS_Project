@@ -5,10 +5,12 @@ import { Link } from 'react-router-dom';
 export default function Navbar() {
   const userId = 1; // por agora estático
   const [user, setUser] = useState(null);
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchUser = () => {
-      fetch(`http://localhost:8080/api/users/${userId}`)
+      fetch(`${baseUrl}/api/users/${userId}`)
+
         .then(res => res.json())
         .then(data => setUser(data))
         .catch(err => console.error("Erro ao buscar dados do utilizador:", err));

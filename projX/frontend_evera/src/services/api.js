@@ -1,12 +1,14 @@
 export async function fetchCarsByUserId(userId) {
-    const res = await fetch(`http://localhost:8080/api/cars/user/${userId}`);
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    const res = await fetch(`${baseUrl}/api/cars/user/${userId}`);
     if (!res.ok) throw new Error("Erro ao buscar carros");
     return await res.json();
   }
   
 
   export async function addCar(carData) {
-    const res = await fetch('http://localhost:8080/api/cars', {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    const res = await fetch(`${baseUrl}/api/cars`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -19,14 +21,16 @@ export async function fetchCarsByUserId(userId) {
   }
   
   export async function deleteCar(id) {
-    const res = await fetch(`http://localhost:8080/api/cars/${id}`, {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    const res = await fetch(`${baseUrl}/api/cars/${id}`, {
       method: 'DELETE'
     });
     if (!res.ok) throw new Error("Erro ao remover carro");
   }
 
   export async function updateCar(carId, updatedData) {
-    const res = await fetch(`http://localhost:8080/api/cars/${carId}`, {
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
+    const res = await fetch(`${baseUrl}/api/cars/${carId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedData),

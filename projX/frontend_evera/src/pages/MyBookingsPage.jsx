@@ -6,10 +6,11 @@ import {
 export default function MyBookingsPage() {
   const userId = 1; // estatico para user com id igual a 1
   const [bookings, setBookings] = useState([]);
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
   const fetchBookings = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/api/bookings/user/${userId}`);
+      const res = await fetch(`${baseUrl}/api/bookings/user/${userId}`);
       const data = await res.json();
       setBookings(data);
     } catch (err) {
@@ -23,7 +24,7 @@ export default function MyBookingsPage() {
 
   const handleStatusUpdate = async (id, newStatus) => {
     try {
-      await fetch(`http://localhost:8080/api/bookings/${id}/status?status=${newStatus}`, {
+      await fetch(`${baseUrl}/bookings/${id}/status?status=${newStatus}`, {
         method: 'PATCH'
       });
       fetchBookings(); 

@@ -117,9 +117,11 @@ const StationsManagement = () => {
     fetchStations();
   }, []);
 
+ const baseUrl = process.env.REACT_APP_API_BASE_URL;
+      
   const fetchStations = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/stations');
+      const response = await fetch(`${baseUrl}/api/stations`);
       const data = await response.json();
       setStations(data);
     } catch (error) {
@@ -146,8 +148,8 @@ const StationsManagement = () => {
       console.log('Dados enviados para estação:', requestBody);
 
       const url = editingStation 
-        ? `http://localhost:8080/api/stations/${editingStation.id}`
-        : 'http://localhost:8080/api/stations';
+        ? `${baseUrl}/api/stations/${editingStation.id}`
+        : `${baseUrl}/api/stations`;
       
       const method = editingStation ? 'PUT' : 'POST';
       
@@ -177,7 +179,7 @@ const StationsManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja eliminar esta estação?')) {
       try {
-        const response = await fetch(`http://localhost:8080/api/stations/${id}`, {
+        const response = await fetch(`${baseUrl}/api/stations/${id}`, {
           method: 'DELETE'
         });
         
@@ -367,7 +369,8 @@ const UsersManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/users');
+      const baseUrl = process.env.REACT_APP_API_BASE_URL;
+      const response = await fetch(`${baseUrl}/api/users`);
       const data = await response.json();
       setUsers(data);
     } catch (error) {
@@ -390,8 +393,9 @@ const UsersManagement = () => {
       };
 
       console.log('Dados enviados para user:', requestBody);
+      const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
-      const response = await fetch(`http://localhost:8080/api/users/${editingUser.id}`, {
+      const response = await fetch(`${baseUrl}/api/users/${editingUser.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(requestBody)
@@ -417,7 +421,9 @@ const UsersManagement = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Tem certeza que deseja eliminar este utilizador?')) {
       try {
-        const response = await fetch(`http://localhost:8080/api/users/${id}`, {
+        const baseUrl = process.env.REACT_APP_API_BASE_URL;
+
+        const response = await fetch(`${baseUrl}/api/users/${id}`, {
           method: 'DELETE'
         });
         

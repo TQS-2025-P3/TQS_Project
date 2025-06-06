@@ -21,7 +21,7 @@ export let options = {
   },
 };
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://192.168.1.101:8080';
 
 // Test data
 let testUsers = [];

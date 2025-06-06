@@ -50,13 +50,13 @@ export default function Home() {
   const fetchUserStatistics = async () => {
     try {
       setLoading(true);
-      
+       const baseUrl = process.env.REACT_APP_API_BASE_URL;
       console.log('A procurar carros do utilizador', userId);
-      const carsResponse = await fetch(`http://localhost:8080/api/cars/user/${userId}`);
+      const carsResponse = await fetch(`${baseUrl}/api/cars/user/${userId}`);
       const cars = await carsResponse.json();
       
       console.log('Buscando bookings do utilizador', userId);
-      const bookingsResponse = await fetch(`http://localhost:8080/api/bookings/user/${userId}`);
+      const bookingsResponse = await fetch(`${baseUrl}/api/bookings/user/${userId}`);
       const bookings = await bookingsResponse.json();
       
       processMonthlyConsumption(bookings);

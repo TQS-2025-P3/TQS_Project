@@ -22,9 +22,10 @@ export default function Stations() {
   const [maxPrice, setMaxPrice] = useState(0.50);
   const [minSlots, setMinSlots] = useState(1);
 
-
+  const baseUrl = process.env.REACT_APP_API_BASE_URL;
+  
   useEffect(() => {
-    fetch("http://localhost:8080/api/stations")
+    fetch(`${baseUrl}/api/stations`)
       .then(res => res.json())
       .then(data => {
         setStations(data);
@@ -48,7 +49,7 @@ export default function Stations() {
   const handleReserveClick = async (station) => {
     setSelectedStation(station);
     try {
-      const res = await fetch(`http://localhost:8080/api/cars/user/${userId}`);
+      const res = await fetch(`${baseUrl}/api/cars/user/${userId}`);
       const data = await res.json();
       setVehicles(data);
       setModalOpen(true);
@@ -64,9 +65,10 @@ export default function Stations() {
       stationId: selectedStation.id,
       duration: 60
     };
+   const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
     try {
-      const response = await fetch("http://localhost:8080/api/bookings", {
+      const response = await fetch(`${baseUrl}/api/bookings`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(bookingData)
@@ -86,9 +88,10 @@ export default function Stations() {
           throw new Error("Erro inesperado ao criar reserva.");
         }
       }
+    const baseUrl = process.env.REACT_APP_API_BASE_URL;
 
       const result = await response.json();
-      const userRes = await fetch(`http://localhost:8080/api/users/${userId}`);
+      const userRes = await fetch(`${baseUrl}/api/users/${userId}`);
       const userData = await userRes.json();
       setUserBalance(userData.balance);
 
@@ -104,7 +107,7 @@ export default function Stations() {
       setSuccessDialogOpen(true);
 
       // Refresh stations
-      const updatedStations = await fetch("http://localhost:8080/api/stations").then(r => r.json());
+      const updatedStations = await fetch(`${baseUrl}/api/stations`).then(r => r.json());
       setStations(updatedStations);
 
     } catch (error) {
