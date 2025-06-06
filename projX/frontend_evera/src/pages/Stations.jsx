@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Container, Typography, Slider, Dialog, DialogTitle, DialogContent, DialogActions,
-  Button, RadioGroup, FormControlLabel, Radio, CircularProgress
+  Button, RadioGroup, FormControlLabel, Radio, CircularProgress, Grid
 } from '@mui/material';
 import StationCard from '../components/StationCard';
 
@@ -21,7 +21,6 @@ export default function Stations() {
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(0.50);
   const [minSlots, setMinSlots] = useState(1);
-
 
   useEffect(() => {
     fetch("http://localhost:8080/api/stations")
@@ -137,31 +136,34 @@ export default function Stations() {
         />
       </div>
       <div style={{ marginBottom: '1.5rem', maxWidth: 300 }}>
-      <Typography gutterBottom>Slots mínimos disponíveis: {minSlots}</Typography>
-      <Slider
-        value={minSlots}
-        min={0}
-        max={5}
-        step={1}
-        onChange={(e, newValue) => setMinSlots(newValue)}
-        valueLabelDisplay="auto"
-        marks
-        sx={{ color: '#388e3c' }}
-      />
-    </div>
-
+        <Typography gutterBottom>Slots mínimos disponíveis: {minSlots}</Typography>
+        <Slider
+          value={minSlots}
+          min={1}
+          max={5}
+          step={1}
+          onChange={(e, newValue) => setMinSlots(newValue)}
+          valueLabelDisplay="auto"
+          marks
+          sx={{ color: '#388e3c' }}
+        />
+      </div>
 
       {loading ? (
         <CircularProgress />
       ) : (
-        stations
-        .filter(station =>
-          station.pricePerKwh <= maxPrice &&
-          station.availableSlots >= minSlots
-        )
-        .map(station => (
-          <StationCard key={station.id} station={station} onReserve={() => handleReserveClick(station)} />
-        ))
+        <Grid container spacing={2} sx={{ mt: 2 }}>
+          {stations
+            .filter(station =>
+              station.pricePerKwh <= maxPrice &&
+              station.availableSlots >= minSlots
+            )
+            .map(station => (
+              <Grid item xs={12} sm={6} md={3} key={station.id}>
+                <StationCard station={station} onReserve={() => handleReserveClick(station)} />
+              </Grid>
+            ))}
+        </Grid>
       )}
 
       {/* Dialog Seleção de Veículo */}
