@@ -8,12 +8,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.project.dto.CarDTO;
+import tqs.project.model.BookCharge;
 import tqs.project.model.Car;
 import tqs.project.model.User;
+import tqs.project.model.enums.BookingStatus;
+import tqs.project.repository.BookChargeRepository;
 import tqs.project.repository.CarRepository;
 import tqs.project.repository.UserRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +34,9 @@ class CarServiceTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private BookChargeRepository bookChargeRepository;
 
     @InjectMocks
     private CarService carService;
@@ -76,6 +83,7 @@ class CarServiceTest {
     @Test
     @DisplayName("Deve adicionar carro com sucesso")
     void shouldAddCarSuccessfully() {
+        when(carRepository.findAll()).thenReturn(Collections.emptyList()); 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(carRepository.save(any(Car.class))).thenReturn(car);
 
@@ -90,6 +98,7 @@ class CarServiceTest {
     @Test
     @DisplayName("Deve lançar exceção ao adicionar carro a utilizador inexistente")
     void shouldThrowExceptionWhenAddingCarToNonExistentUser() {
+        when(carRepository.findAll()).thenReturn(Collections.emptyList()); 
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
         carDTO.setUserId(999L);
 
@@ -140,8 +149,13 @@ class CarServiceTest {
     @Test
     @DisplayName("Deve eliminar carro por ID")
     void shouldDeleteCarById() {
+        when(bookChargeRepository.findByCarIdAndStatus(1L, BookingStatus.RESERVED))
+            .thenReturn(Collections.emptyList());
+
         carService.deleteCarById(1L);
 
+        verify(bookChargeRepository).findByCarIdAndStatus(1L, BookingStatus.RESERVED);
+        verify(bookChargeRepository).deleteByCarId(1L);
         verify(carRepository).deleteById(1L);
     }
 
@@ -155,6 +169,7 @@ class CarServiceTest {
         updateDTO.setBatteryCapacity(42.2);
 
         when(carRepository.findById(1L)).thenReturn(Optional.of(car));
+        when(carRepository.findAll()).thenReturn(Arrays.asList(car)); 
         when(carRepository.save(any(Car.class))).thenReturn(car);
 
         Car result = carService.updateCar(1L, updateDTO);

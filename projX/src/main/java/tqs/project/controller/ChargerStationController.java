@@ -40,6 +40,8 @@ public class ChargerStationController {
         try {
             ChargerStation station = stationService.updateStation(id, stationDTO);
             return ResponseEntity.ok(station);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                 .body(Map.of("error", e.getMessage()));
@@ -51,6 +53,8 @@ public class ChargerStationController {
         try {
             stationService.deleteStation(id);
             return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                 .body(Map.of("error", e.getMessage()));
@@ -58,7 +62,12 @@ public class ChargerStationController {
     }
 
     @GetMapping("/{id}")
-    public ChargerStation getStationById(@PathVariable Long id) {
-        return stationService.getStationById(id);
+    public ResponseEntity<ChargerStation> getStationById(@PathVariable Long id) {
+        try {
+            ChargerStation station = stationService.getStationById(id);
+            return ResponseEntity.ok(station);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

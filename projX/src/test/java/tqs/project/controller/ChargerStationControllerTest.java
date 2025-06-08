@@ -97,6 +97,21 @@ class ChargerStationControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/stations - Deve retornar erro quando criar estação falha")
+    void shouldReturnErrorWhenCreateStationFails() throws Exception {
+        when(stationService.createStation(any(ChargerStationDTO.class)))
+            .thenThrow(new RuntimeException("Já existe uma estação com o nome: Estação Norte"));
+
+        mockMvc.perform(post("/api/stations")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stationDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Já existe uma estação com o nome: Estação Norte"));
+
+        verify(stationService).createStation(any(ChargerStationDTO.class));
+    }
+
+    @Test
     @DisplayName("PUT /api/stations/{id} - Deve atualizar estação")
     void shouldUpdateStation() throws Exception {
         when(stationService.updateStation(eq(1L), any(ChargerStationDTO.class))).thenReturn(station);
@@ -107,6 +122,35 @@ class ChargerStationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Estação Norte"))
                 .andExpect(jsonPath("$.latitude").value(41.1579));
+
+        verify(stationService).updateStation(eq(1L), any(ChargerStationDTO.class));
+    }
+
+    @Test
+    @DisplayName("PUT /api/stations/{id} - Deve retornar 404 quando estação não existe para atualizar")
+    void shouldReturn404WhenUpdatingNonExistentStation() throws Exception {
+        when(stationService.updateStation(eq(999L), any(ChargerStationDTO.class)))
+            .thenThrow(new IllegalArgumentException("Estação com ID 999 não encontrada"));
+
+        mockMvc.perform(put("/api/stations/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stationDTO)))
+                .andExpect(status().isNotFound());
+
+        verify(stationService).updateStation(eq(999L), any(ChargerStationDTO.class));
+    }
+
+    @Test
+    @DisplayName("PUT /api/stations/{id} - Deve retornar erro quando atualizar estação falha")
+    void shouldReturnErrorWhenUpdateStationFails() throws Exception {
+        when(stationService.updateStation(eq(1L), any(ChargerStationDTO.class)))
+            .thenThrow(new RuntimeException("Já existe outra estação com o nome: Estação Norte"));
+
+        mockMvc.perform(put("/api/stations/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(stationDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Já existe outra estação com o nome: Estação Norte"));
 
         verify(stationService).updateStation(eq(1L), any(ChargerStationDTO.class));
     }
@@ -135,6 +179,19 @@ class ChargerStationControllerTest {
     }
 
     @Test
+    @DisplayName("DELETE /api/stations/{id} - Deve retornar erro quando eliminar estação falha")
+    void shouldReturnErrorWhenDeleteStationFails() throws Exception {
+        doThrow(new RuntimeException("Não é possível apagar a estação. Existem reservas ativas"))
+            .when(stationService).deleteStation(1L);
+
+        mockMvc.perform(delete("/api/stations/1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Não é possível apagar a estação. Existem reservas ativas"));
+
+        verify(stationService).deleteStation(1L);
+    }
+
+    @Test
     @DisplayName("GET /api/stations/{id} - Deve retornar estação por ID")
     void shouldReturnStationById() throws Exception {
         when(stationService.getStationById(1L)).thenReturn(station);
@@ -146,5 +203,17 @@ class ChargerStationControllerTest {
                 .andExpect(jsonPath("$.longitude").value(-8.6291));
 
         verify(stationService).getStationById(1L);
+    }
+
+    @Test
+    @DisplayName("GET /api/stations/{id} - Deve retornar 404 quando estação não existe para obter")
+    void shouldReturn404WhenGettingNonExistentStation() throws Exception {
+        when(stationService.getStationById(999L))
+            .thenThrow(new IllegalArgumentException("Estação com ID 999 não encontrada"));
+
+        mockMvc.perform(get("/api/stations/999"))
+                .andExpect(status().isNotFound());
+
+        verify(stationService).getStationById(999L);
     }
 }

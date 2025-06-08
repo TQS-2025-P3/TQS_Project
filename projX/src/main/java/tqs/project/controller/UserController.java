@@ -36,8 +36,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(user);
     }
 
     @PatchMapping("/{id}/addFunds")
@@ -47,7 +51,7 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
-                .body(Map.of("error", "Erro ao adicionar fundos: " + e.getMessage()));
+                .body("Erro ao adicionar fundos: " + e.getMessage());
         }
     }
 
@@ -61,6 +65,8 @@ public class UserController {
         try {
             User user = userService.updateUser(id, userDTO);
             return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                 .body(Map.of("error", e.getMessage()));
@@ -72,6 +78,8 @@ public class UserController {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest()
                 .body(Map.of("error", e.getMessage()));

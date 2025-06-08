@@ -8,12 +8,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import tqs.project.dto.ChargerStationDTO;
+import tqs.project.model.BookCharge;
 import tqs.project.model.ChargerStation;
 import tqs.project.model.Staff;
+import tqs.project.model.enums.BookingStatus;
+import tqs.project.repository.BookChargeRepository;
 import tqs.project.repository.ChargerStationRepository;
 import tqs.project.repository.StaffRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +34,9 @@ class ChargerStationServiceTest {
 
     @Mock
     private StaffRepository staffRepository;
+
+    @Mock
+    private BookChargeRepository bookChargeRepository;
 
     @InjectMocks
     private ChargerStationService stationService;
@@ -79,6 +86,8 @@ class ChargerStationServiceTest {
     @Test
     @DisplayName("Deve criar estação com sucesso")
     void shouldCreateStationSuccessfully() {
+        when(stationRepository.findByNameIgnoreCase("Estação Norte")).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(41.1579, -8.6291)).thenReturn(null);
         when(staffRepository.findById(1L)).thenReturn(Optional.of(staff));
         when(stationRepository.save(any(ChargerStation.class))).thenReturn(station);
 
@@ -93,6 +102,8 @@ class ChargerStationServiceTest {
     @Test
     @DisplayName("Deve lançar exceção ao criar estação com staff inexistente")
     void shouldThrowExceptionWhenCreatingStationWithNonExistentStaff() {
+        when(stationRepository.findByNameIgnoreCase(anyString())).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(anyDouble(), anyDouble())).thenReturn(null);
         when(staffRepository.findById(999L)).thenReturn(Optional.empty());
         stationDTO.setStaffId(999L);
 
@@ -116,6 +127,8 @@ class ChargerStationServiceTest {
         updateDTO.setStaffId(1L);
 
         when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase("Estação Sul")).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(38.7169, -9.1399)).thenReturn(null);
         when(staffRepository.findById(1L)).thenReturn(Optional.of(staff));
         when(stationRepository.save(any(ChargerStation.class))).thenReturn(station);
 
@@ -144,6 +157,8 @@ class ChargerStationServiceTest {
     @DisplayName("Deve lançar exceção ao atualizar estação com staff inexistente")
     void shouldThrowExceptionWhenUpdatingStationWithNonExistentStaff() {
         when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase(anyString())).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(anyDouble(), anyDouble())).thenReturn(null);
         when(staffRepository.findById(999L)).thenReturn(Optional.empty());
         stationDTO.setStaffId(999L);
 
@@ -160,10 +175,14 @@ class ChargerStationServiceTest {
     @DisplayName("Deve eliminar estação existente")
     void shouldDeleteExistingStation() {
         when(stationRepository.existsById(1L)).thenReturn(true);
+        when(bookChargeRepository.findByChargerStationIdAndStatus(1L, BookingStatus.RESERVED))
+            .thenReturn(Collections.emptyList());
 
         stationService.deleteStation(1L);
 
         verify(stationRepository).existsById(1L);
+        verify(bookChargeRepository).findByChargerStationIdAndStatus(1L, BookingStatus.RESERVED);
+        verify(bookChargeRepository).deleteByChargerStationId(1L);
         verify(stationRepository).deleteById(1L);
     }
 
