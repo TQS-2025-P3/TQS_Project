@@ -9,6 +9,7 @@ import tqs.project.model.User;
 import tqs.project.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,8 +25,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.createUser(userDTO));
+    public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
+        try {
+            User user = userService.createUser(userDTO);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @GetMapping("/{id}")
@@ -35,26 +42,29 @@ public class UserController {
 
     @PatchMapping("/{id}/addFunds")
     public ResponseEntity<?> addFunds(@PathVariable Long id, @RequestParam double amount) {
-    try {
-        User updatedUser = userService.addFunds(id, amount);
-        return ResponseEntity.ok(updatedUser);
-    } catch (RuntimeException e) {
-        return ResponseEntity
-            .badRequest()
-            .body("Erro ao adicionar fundos: " + e.getMessage());
+        try {
+            User updatedUser = userService.addFunds(id, amount);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", "Erro ao adicionar fundos: " + e.getMessage()));
+        }
     }
-}
+
     @GetMapping("/{id}/balance")
     public ResponseEntity<Double> getUserBalance(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserBalance(id));
     }
 
-    
-
-
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
-        return userService.updateUser(id, userDTO);
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @RequestBody UserDTO userDTO) {
+        try {
+            User user = userService.updateUser(id, userDTO);
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -62,8 +72,9 @@ public class UserController {
         try {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
         }
     }
 }

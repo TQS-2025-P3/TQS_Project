@@ -16,9 +16,13 @@ public class ChargerStation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false) // ← Nome único
     private String name;
 
+    @Column(nullable = false)
     private double latitude;
+    
+    @Column(nullable = false)
     private double longitude;
 
     private int slots;
@@ -29,7 +33,6 @@ public class ChargerStation {
     @Column(name = "price_per_kwh")
     private double pricePerKwh;
 
-
     @ManyToOne
     @JoinColumn(name = "staff_id")
     @JsonBackReference
@@ -39,6 +42,4 @@ public class ChargerStation {
     public int getAvailableSlots() {
         return slots - slotsInUse;
     }
-
-
 }

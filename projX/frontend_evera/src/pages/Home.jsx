@@ -304,7 +304,7 @@ export default function Home() {
             <Grid size={{ xs: 12, lg: 4 }}>
               <Paper sx={{ p: 3 }}>
                 <Typography variant="h6" gutterBottom>
-                  💡 Consumo Mensal (kWh & €)
+                  Consumo Mensal (kWh & €)
                 </Typography>
                 <ResponsiveContainer width="100%" height={300}>
                   <LineChart data={monthlyConsumption}>

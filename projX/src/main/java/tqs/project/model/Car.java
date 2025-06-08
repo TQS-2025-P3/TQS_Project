@@ -17,7 +17,10 @@ public class Car {
 
     private String brand;
     private String model;
+    
+    @Column(unique = true, nullable = false) // ← Adiciona constraint único
     private String plate;
+    
     private double batteryCapacity;
 
     @ManyToOne
