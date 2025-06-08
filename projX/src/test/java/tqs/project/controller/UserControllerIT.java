@@ -83,6 +83,21 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("POST /api/users - Deve retornar erro quando criar utilizador falha")
+    void shouldReturnErrorWhenCreateUserFails() throws Exception {
+        when(userService.createUser(any(UserDTO.class)))
+            .thenThrow(new RuntimeException("Já existe um utilizador com o email: joao@test.com"));
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Já existe um utilizador com o email: joao@test.com"));
+
+        verify(userService).createUser(any(UserDTO.class));
+    }
+
+    @Test
     @DisplayName("GET /api/users/{id} - Deve retornar utilizador por ID")
     void shouldReturnUserById() throws Exception {
         when(userService.getUserById(1L)).thenReturn(user);
@@ -93,6 +108,17 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.email").value("joao@test.com"));
 
         verify(userService).getUserById(1L);
+    }
+
+    @Test
+    @DisplayName("GET /api/users/{id} - Deve retornar 404 quando utilizador não existe")
+    void shouldReturn404WhenUserNotFoundById() throws Exception {
+        when(userService.getUserById(999L)).thenReturn(null);
+
+        mockMvc.perform(get("/api/users/999"))
+                .andExpect(status().isNotFound());
+
+        verify(userService).getUserById(999L);
     }
 
     @Test
@@ -113,10 +139,24 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("PATCH /api/users/{id}/addFunds - Deve retornar erro quando falha")
+    @DisplayName("PATCH /api/users/{id}/addFunds - Deve retornar erro quando falha com RuntimeException")
     void shouldReturnErrorWhenAddFundsFails() throws Exception {
         when(userService.addFunds(1L, -10.0))
             .thenThrow(new RuntimeException("Montante inválido"));
+
+        mockMvc.perform(patch("/api/users/1/addFunds")
+                .param("amount", "-10.0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Erro ao adicionar fundos: Montante inválido"));
+
+        verify(userService).addFunds(1L, -10.0);
+    }
+
+    @Test
+    @DisplayName("PATCH /api/users/{id}/addFunds - Deve retornar erro quando falha com IllegalArgumentException")
+    void shouldReturnErrorWhenAddFundsFailsWithIllegalArgument() throws Exception {
+        when(userService.addFunds(1L, -10.0))
+            .thenThrow(new IllegalArgumentException("Montante inválido"));
 
         mockMvc.perform(patch("/api/users/1/addFunds")
                 .param("amount", "-10.0"))
@@ -153,6 +193,35 @@ class UserControllerTest {
     }
 
     @Test
+    @DisplayName("PUT /api/users/{id} - Deve retornar 404 quando utilizador não existe para atualizar")
+    void shouldReturn404WhenUpdatingNonExistentUser() throws Exception {
+        when(userService.updateUser(eq(999L), any(UserDTO.class)))
+            .thenThrow(new IllegalArgumentException("Utilizador com ID 999 não encontrado"));
+
+        mockMvc.perform(put("/api/users/999")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isNotFound());
+
+        verify(userService).updateUser(eq(999L), any(UserDTO.class));
+    }
+
+    @Test
+    @DisplayName("PUT /api/users/{id} - Deve retornar erro quando atualizar utilizador falha")
+    void shouldReturnErrorWhenUpdateUserFails() throws Exception {
+        when(userService.updateUser(eq(1L), any(UserDTO.class)))
+            .thenThrow(new RuntimeException("Já existe outro utilizador com o email: joao@test.com"));
+
+        mockMvc.perform(put("/api/users/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(userDTO)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Já existe outro utilizador com o email: joao@test.com"));
+
+        verify(userService).updateUser(eq(1L), any(UserDTO.class));
+    }
+
+    @Test
     @DisplayName("DELETE /api/users/{id} - Deve eliminar utilizador com sucesso")
     void shouldDeleteUserSuccessfully() throws Exception {
         doNothing().when(userService).deleteUser(1L);
@@ -173,5 +242,18 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
 
         verify(userService).deleteUser(999L);
+    }
+
+    @Test
+    @DisplayName("DELETE /api/users/{id} - Deve retornar erro quando eliminar utilizador falha")
+    void shouldReturnErrorWhenDeleteUserFails() throws Exception {
+        doThrow(new RuntimeException("Não é possível apagar o utilizador. Existem reservas ativas"))
+            .when(userService).deleteUser(1L);
+
+        mockMvc.perform(delete("/api/users/1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Não é possível apagar o utilizador. Existem reservas ativas"));
+
+        verify(userService).deleteUser(1L);
     }
 }

@@ -1,5 +1,6 @@
 package tqs.project.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
@@ -11,6 +12,9 @@ import lombok.*;
 public abstract class Person {
 
     private String name;
+    
+    @Column(unique = true, nullable = false) // ← Email único
     private String email;
+    
     private String password;
 }

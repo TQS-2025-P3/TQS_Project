@@ -9,6 +9,7 @@ import tqs.project.model.ChargerStation;
 import tqs.project.service.ChargerStationService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/stations")
@@ -24,13 +25,27 @@ public class ChargerStationController {
     }
 
     @PostMapping
-    public ChargerStation createStation(@Valid @RequestBody ChargerStationDTO stationDTO) {
-        return stationService.createStation(stationDTO);
+    public ResponseEntity<?> createStation(@Valid @RequestBody ChargerStationDTO stationDTO) {
+        try {
+            ChargerStation station = stationService.createStation(stationDTO);
+            return ResponseEntity.ok(station);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @PutMapping("/{id}")
-    public ChargerStation updateStation(@PathVariable Long id, @Valid @RequestBody ChargerStationDTO stationDTO) {
-        return stationService.updateStation(id, stationDTO);
+    public ResponseEntity<?> updateStation(@PathVariable Long id, @Valid @RequestBody ChargerStationDTO stationDTO) {
+        try {
+            ChargerStation station = stationService.updateStation(id, stationDTO);
+            return ResponseEntity.ok(station);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
+        }
     }
 
     @DeleteMapping("/{id}")
@@ -40,11 +55,19 @@ public class ChargerStationController {
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("error", e.getMessage()));
         }
     }
 
     @GetMapping("/{id}")
-    public ChargerStation getStationById(@PathVariable Long id) {
-        return stationService.getStationById(id);
+    public ResponseEntity<ChargerStation> getStationById(@PathVariable Long id) {
+        try {
+            ChargerStation station = stationService.getStationById(id);
+            return ResponseEntity.ok(station);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
-    }
+}
