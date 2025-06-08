@@ -100,6 +100,41 @@ class ChargerStationServiceTest {
     }
 
     @Test
+    @DisplayName("Deve lançar exceção ao criar estação com nome duplicado")
+    void shouldThrowExceptionWhenCreatingStationWithDuplicateName() {
+        ChargerStation existingStation = new ChargerStation();
+        existingStation.setId(2L);
+        existingStation.setName("Estação Norte");
+        
+        when(stationRepository.findByNameIgnoreCase("Estação Norte"))
+            .thenReturn(new java.util.ArrayList<>(Arrays.asList(existingStation)));
+
+        assertThatThrownBy(() -> stationService.createStation(stationDTO))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Já existe uma estação com o nome: Estação Norte");
+
+        verify(stationRepository, never()).save(any(ChargerStation.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao criar estação com coordenadas duplicadas")
+    void shouldThrowExceptionWhenCreatingStationWithDuplicateCoordinates() {
+        ChargerStation existingStation = new ChargerStation();
+        existingStation.setId(2L);
+        existingStation.setLatitude(41.1579);
+        existingStation.setLongitude(-8.6291);
+
+        when(stationRepository.findByNameIgnoreCase("Estação Norte")).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(41.1579, -8.6291)).thenReturn(existingStation);
+
+        assertThatThrownBy(() -> stationService.createStation(stationDTO))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Já existe uma estação nas coordenadas: 41.1579, -8.6291");
+
+        verify(stationRepository, never()).save(any(ChargerStation.class));
+    }
+
+    @Test
     @DisplayName("Deve lançar exceção ao criar estação com staff inexistente")
     void shouldThrowExceptionWhenCreatingStationWithNonExistentStaff() {
         when(stationRepository.findByNameIgnoreCase(anyString())).thenReturn(Collections.emptyList());
@@ -138,6 +173,119 @@ class ChargerStationServiceTest {
         verify(stationRepository).findById(1L);
         verify(staffRepository).findById(1L);
         verify(stationRepository).save(any(ChargerStation.class));
+    }
+
+    @Test
+    @DisplayName("Deve permitir atualizar estação com o mesmo nome")
+    void shouldAllowUpdateStationWithSameName() {
+        ChargerStationDTO updateDTO = new ChargerStationDTO();
+        updateDTO.setName("Estação Norte"); 
+        updateDTO.setLatitude(38.7169);
+        updateDTO.setLongitude(-9.1399);
+        updateDTO.setSlots(8);
+        updateDTO.setPricePerKwh(0.30);
+        updateDTO.setStaffId(1L);
+
+        ChargerStation existingStationWithSameName = new ChargerStation();
+        existingStationWithSameName.setId(1L); 
+        existingStationWithSameName.setName("Estação Norte");
+
+        when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase("Estação Norte"))
+            .thenReturn(new java.util.ArrayList<>(Arrays.asList(existingStationWithSameName)));
+        when(stationRepository.findByLatitudeAndLongitude(38.7169, -9.1399)).thenReturn(null);
+        when(staffRepository.findById(1L)).thenReturn(Optional.of(staff));
+        when(stationRepository.save(any(ChargerStation.class))).thenReturn(station);
+
+        ChargerStation result = stationService.updateStation(1L, updateDTO);
+
+        assertThat(result).isNotNull();
+        verify(stationRepository).findById(1L);
+        verify(stationRepository).save(any(ChargerStation.class));
+    }
+
+    @Test
+    @DisplayName("Deve permitir atualizar estação com as mesmas coordenadas")
+    void shouldAllowUpdateStationWithSameCoordinates() {
+        ChargerStationDTO updateDTO = new ChargerStationDTO();
+        updateDTO.setName("Estação Sul");
+        updateDTO.setLatitude(41.1579); 
+        updateDTO.setLongitude(-8.6291);
+        updateDTO.setSlots(8);
+        updateDTO.setPricePerKwh(0.30);
+        updateDTO.setStaffId(1L);
+
+        ChargerStation existingStationWithSameCoords = new ChargerStation();
+        existingStationWithSameCoords.setId(1L); 
+        existingStationWithSameCoords.setLatitude(41.1579);
+        existingStationWithSameCoords.setLongitude(-8.6291);
+
+        when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase("Estação Sul")).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(41.1579, -8.6291)).thenReturn(existingStationWithSameCoords);
+        when(staffRepository.findById(1L)).thenReturn(Optional.of(staff));
+        when(stationRepository.save(any(ChargerStation.class))).thenReturn(station);
+
+        ChargerStation result = stationService.updateStation(1L, updateDTO);
+
+        assertThat(result).isNotNull();
+        verify(stationRepository).findById(1L);
+        verify(stationRepository).save(any(ChargerStation.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao atualizar estação com nome duplicado de outra estação")
+    void shouldThrowExceptionWhenUpdatingStationWithDuplicateNameFromOtherStation() {
+        ChargerStationDTO updateDTO = new ChargerStationDTO();
+        updateDTO.setName("Estação Existente");
+        updateDTO.setLatitude(38.7169);
+        updateDTO.setLongitude(-9.1399);
+        updateDTO.setSlots(8);
+        updateDTO.setPricePerKwh(0.30);
+        updateDTO.setStaffId(1L);
+
+        ChargerStation otherStationWithSameName = new ChargerStation();
+        otherStationWithSameName.setId(2L); 
+        otherStationWithSameName.setName("Estação Existente");
+
+        when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase("Estação Existente"))
+            .thenReturn(new java.util.ArrayList<>(Arrays.asList(otherStationWithSameName)));
+
+        assertThatThrownBy(() -> stationService.updateStation(1L, updateDTO))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Já existe outra estação com o nome: Estação Existente");
+
+        verify(stationRepository).findById(1L);
+        verify(stationRepository, never()).save(any(ChargerStation.class));
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao atualizar estação com coordenadas duplicadas de outra estação")
+    void shouldThrowExceptionWhenUpdatingStationWithDuplicateCoordinatesFromOtherStation() {
+        ChargerStationDTO updateDTO = new ChargerStationDTO();
+        updateDTO.setName("Estação Sul");
+        updateDTO.setLatitude(38.7169);
+        updateDTO.setLongitude(-9.1399);
+        updateDTO.setSlots(8);
+        updateDTO.setPricePerKwh(0.30);
+        updateDTO.setStaffId(1L);
+
+        ChargerStation otherStationWithSameCoords = new ChargerStation();
+        otherStationWithSameCoords.setId(2L);
+        otherStationWithSameCoords.setLatitude(38.7169);
+        otherStationWithSameCoords.setLongitude(-9.1399);
+
+        when(stationRepository.findById(1L)).thenReturn(Optional.of(station));
+        when(stationRepository.findByNameIgnoreCase("Estação Sul")).thenReturn(Collections.emptyList());
+        when(stationRepository.findByLatitudeAndLongitude(38.7169, -9.1399)).thenReturn(otherStationWithSameCoords);
+
+        assertThatThrownBy(() -> stationService.updateStation(1L, updateDTO))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Já existe outra estação nas coordenadas: 38.7169, -9.1399");
+
+        verify(stationRepository).findById(1L);
+        verify(stationRepository, never()).save(any(ChargerStation.class));
     }
 
     @Test
@@ -184,6 +332,25 @@ class ChargerStationServiceTest {
         verify(bookChargeRepository).findByChargerStationIdAndStatus(1L, BookingStatus.RESERVED);
         verify(bookChargeRepository).deleteByChargerStationId(1L);
         verify(stationRepository).deleteById(1L);
+    }
+
+    @Test
+    @DisplayName("Deve lançar exceção ao eliminar estação com reservas ativas")
+    void shouldThrowExceptionWhenDeletingStationWithActiveBookings() {
+        BookCharge activeBooking = new BookCharge();
+        activeBooking.setId(100L);
+
+        when(stationRepository.existsById(1L)).thenReturn(true);
+        when(bookChargeRepository.findByChargerStationIdAndStatus(1L, BookingStatus.RESERVED))
+            .thenReturn(Arrays.asList(activeBooking));
+
+        assertThatThrownBy(() -> stationService.deleteStation(1L))
+            .isInstanceOf(RuntimeException.class)
+            .hasMessageContaining("Não é possível apagar a estação. Existem 1 reserva(s) ativa(s)");
+
+        verify(stationRepository).existsById(1L);
+        verify(bookChargeRepository).findByChargerStationIdAndStatus(1L, BookingStatus.RESERVED);
+        verify(stationRepository, never()).deleteById(anyLong());
     }
 
     @Test
