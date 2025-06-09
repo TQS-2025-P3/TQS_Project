@@ -14,7 +14,7 @@ insert_batch() {
   local batch_name=$1
   local sql_commands=$2
     
-  sudo docker exec mysql_server mysql -uEvera_staff -psenha1234 -DEvera -e "$sql_commands" >/dev/null 2>&1
+  docker exec mysql_server mysql -uEvera_staff -psenha1234 -DEvera -e "$sql_commands" >/dev/null 2>&1
   
   if [ $? -eq 0 ]; then
     echo "$batch_name inserido com sucesso"
@@ -29,7 +29,7 @@ create_full_system() {
     echo ""
 
 
-    sudo docker exec mysql_server mysql -uEvera_staff -psenha1234 -DEvera -e "
+    docker exec mysql_server mysql -uEvera_staff -psenha1234 -DEvera -e "
     DELETE FROM book_charge;
     DELETE FROM car;
     DELETE FROM app_user;
@@ -378,21 +378,21 @@ main() {
 }
 
 
-if !  sudo docker ps > /dev/null 2>&1; then
-    echo " Erro: sudo sudo docker não está a rodar ou não está acessível."
-    echo " Executa: sudo systemctl start sudo docker"
+if !  docker ps > /dev/null 2>&1; then
+    echo " Erro: docker não está a rodar ou não está acessível."
+    echo " Executa: sudo systemctl start docker"
     exit 1
 fi
 
-if !  sudo docker ps -a | grep -q mysql_server; then
+if !  docker ps -a | grep -q mysql_server; then
     echo " Erro: Container mysql_server não encontrado."
     echo " Executa primeiro o container MySQL do projeto."
     exit 1
 fi
 
-if !  sudo docker ps | grep -q mysql_server; then
+if !  docker ps | grep -q mysql_server; then
     echo "  Container mysql_server não está a rodar. Iniciando..."
-    sudo docker start mysql_server
+    docker start mysql_server
     sleep 3
 fi
 
