@@ -1,0 +1,26 @@
+[
+    {
+      "id": 1,
+      "brand": "Tesla",
+      "model": "Model 3",
+      "plate": "TS-12-34",
+      "batteryCapacity": 75.0,
+      "userId": 1
+    },
+    {
+      "id": 2,
+      "brand": "BMW",
+      "model": "i4",
+      "plate": "BM-56-78",
+      "batteryCapacity": 80.0,
+      "userId": 1
+    },
+    {
+      "id": 3,
+      "brand": "Mercedes",
+      "model": "EQS",
+      "plate": "MB-90-12",
+      "batteryCapacity": 107.8,
+      "userId": 1
+    }
+  ]

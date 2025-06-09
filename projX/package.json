@@ -1,0 +1,20 @@
+{
+    "name": "projX",
+    "version": "1.0.0",
+    "description": "TQS Project - Spring Boot + React with Cypress E2E tests",
+    "scripts": {
+      "cy:open": "cypress open",
+      "cy:run": "cypress run",
+      "cy:run:headless": "cypress run --headless",
+      "test:e2e": "cypress run --spec 'cypress/e2e/**/*.cy.js'",
+      "test:profile": "cypress run --spec 'cypress/e2e/profile.cy.js'",
+      "test:cypress": "cypress run",
+      "cypress:open": "cypress open"
+    },
+    "devDependencies": {
+      "cypress": "^13.6.0"
+    },
+    "keywords": ["tqs", "cypress", "e2e", "testing", "spring-boot", "react"],
+    "author": "",
+    "license": "ISC"
+  }
