@@ -1,6 +1,9 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ChargerStationController.class)
-class ChargerStationControllerTest {
+class ChargerStationControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,6 +66,7 @@ class ChargerStationControllerTest {
         stationDTO.setStaffId(1L);
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("GET /api/stations - Deve retornar todas as estações")
     void shouldReturnAllStations() throws Exception {
@@ -80,6 +84,7 @@ class ChargerStationControllerTest {
         verify(stationService).getAllStations();
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("POST /api/stations - Deve criar estação com sucesso")
     void shouldCreateStationSuccessfully() throws Exception {
@@ -96,6 +101,7 @@ class ChargerStationControllerTest {
         verify(stationService).createStation(any(ChargerStationDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("POST /api/stations - Deve retornar erro quando criar estação falha")
     void shouldReturnErrorWhenCreateStationFails() throws Exception {
@@ -111,6 +117,7 @@ class ChargerStationControllerTest {
         verify(stationService).createStation(any(ChargerStationDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("PUT /api/stations/{id} - Deve atualizar estação")
     void shouldUpdateStation() throws Exception {
@@ -126,6 +133,7 @@ class ChargerStationControllerTest {
         verify(stationService).updateStation(eq(1L), any(ChargerStationDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("PUT /api/stations/{id} - Deve retornar 404 quando estação não existe para atualizar")
     void shouldReturn404WhenUpdatingNonExistentStation() throws Exception {
@@ -140,6 +148,7 @@ class ChargerStationControllerTest {
         verify(stationService).updateStation(eq(999L), any(ChargerStationDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("PUT /api/stations/{id} - Deve retornar erro quando atualizar estação falha")
     void shouldReturnErrorWhenUpdateStationFails() throws Exception {
@@ -155,6 +164,7 @@ class ChargerStationControllerTest {
         verify(stationService).updateStation(eq(1L), any(ChargerStationDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("DELETE /api/stations/{id} - Deve eliminar estação com sucesso")
     void shouldDeleteStationSuccessfully() throws Exception {
@@ -166,6 +176,7 @@ class ChargerStationControllerTest {
         verify(stationService).deleteStation(1L);
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("DELETE /api/stations/{id} - Deve retornar 404 quando estação não existe")
     void shouldReturn404WhenStationNotExists() throws Exception {
@@ -178,6 +189,7 @@ class ChargerStationControllerTest {
         verify(stationService).deleteStation(999L);
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("DELETE /api/stations/{id} - Deve retornar erro quando eliminar estação falha")
     void shouldReturnErrorWhenDeleteStationFails() throws Exception {
@@ -191,6 +203,7 @@ class ChargerStationControllerTest {
         verify(stationService).deleteStation(1L);
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("GET /api/stations/{id} - Deve retornar estação por ID")
     void shouldReturnStationById() throws Exception {
@@ -205,6 +218,7 @@ class ChargerStationControllerTest {
         verify(stationService).getStationById(1L);
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("GET /api/stations/{id} - Deve retornar 404 quando estação não existe para obter")
     void shouldReturn404WhenGettingNonExistentStation() throws Exception {

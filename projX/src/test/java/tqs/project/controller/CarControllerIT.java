@@ -2,6 +2,8 @@ package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -55,6 +57,7 @@ class CarControllerTest {
         carDTO.setUserId(1L);
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("GET /api/cars - Deve retornar todos os carros")
     void shouldReturnAllCars() throws Exception {
@@ -71,6 +74,7 @@ class CarControllerTest {
         verify(carService).getAllCars();
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("POST /api/cars - Deve criar carro com sucesso")
     void shouldCreateCarSuccessfully() throws Exception {
@@ -87,6 +91,7 @@ class CarControllerTest {
         verify(carService).addCar(any(CarDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("GET /api/cars/{id} - Deve retornar carro por ID")
     void shouldReturnCarById() throws Exception {
@@ -101,6 +106,7 @@ class CarControllerTest {
         verify(carService).getCarById(1L);
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("GET /api/cars/user/{userId} - Deve retornar carros do utilizador")
     void shouldReturnCarsByUser() throws Exception {
@@ -116,6 +122,7 @@ class CarControllerTest {
         verify(carService).getCarsByUserId(1L);
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("DELETE /api/cars/{id} - Deve eliminar carro")
     void shouldDeleteCar() throws Exception {
@@ -127,6 +134,7 @@ class CarControllerTest {
         verify(carService).deleteCarById(1L);
     }
 
+    @Requirement("TQSPROJECT-1219")
     @Test
     @DisplayName("PUT /api/cars/{id} - Deve atualizar carro")
     void shouldUpdateCar() throws Exception {

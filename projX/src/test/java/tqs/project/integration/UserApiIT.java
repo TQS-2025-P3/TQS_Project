@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import tqs.project.dto.UserDTO;
 
 import static io.restassured.RestAssured.given;
@@ -26,6 +28,7 @@ class UserApiIT {
         RestAssured.baseURI = "http://localhost";
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve criar utilizador via API")
     void shouldCreateUserViaApi() {
@@ -46,6 +49,7 @@ class UserApiIT {
             .body("id", notNullValue());
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve listar utilizadores via API")
     void shouldListUsersViaApi() {
@@ -69,6 +73,7 @@ class UserApiIT {
             .body("[0].name", notNullValue());
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve adicionar fundos via API")
     void shouldAddFundsViaApi() {
@@ -96,6 +101,7 @@ class UserApiIT {
             .body("balance", equalTo(100.0f));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve retornar erro 400 ao adicionar fundos negativos")
     void shouldReturn400WhenAddingNegativeFunds() {

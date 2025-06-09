@@ -4,6 +4,7 @@ O objetivo deste projeto é desenvolver uma aplicação que permita aos utilizad
 
 ---
 
+
 ## Equipa e Funções
 
 - **Pedro Rei** – Team Coordinator & Product Owner 

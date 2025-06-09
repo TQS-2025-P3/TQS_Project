@@ -1,6 +1,9 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(StaffController.class)
-class StaffControllerTest {
+class StaffControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -50,6 +53,7 @@ class StaffControllerTest {
         staffDTO.setPassword("admin123");
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("POST /api/staffs - Deve criar staff com sucesso")
     void shouldCreateStaffSuccessfully() throws Exception {
@@ -65,6 +69,7 @@ class StaffControllerTest {
         verify(staffService).createStaff(any(StaffDTO.class));
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("GET /api/staffs - Deve retornar todos os staff")
     void shouldReturnAllStaff() throws Exception {
@@ -80,6 +85,7 @@ class StaffControllerTest {
         verify(staffService).getAllStaff();
     }
 
+    @Requirement("TQSPROJECT-62")
     @Test
     @DisplayName("GET /api/staffs/{id} - Deve retornar staff por ID")
     void shouldReturnStaffById() throws Exception {
