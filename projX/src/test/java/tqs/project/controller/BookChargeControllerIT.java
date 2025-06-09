@@ -1,6 +1,9 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookChargeController.class)
-class BookChargeControllerTest {
+class BookChargeControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,6 +57,7 @@ class BookChargeControllerTest {
         bookingDTO.setDuration(60);
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("POST /api/bookings - Deve criar reserva com sucesso")
     void shouldCreateBookingSuccessfully() throws Exception {
@@ -70,6 +74,7 @@ class BookChargeControllerTest {
         verify(bookChargeService).createBooking(any(BookChargeDTO.class));
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("GET /api/bookings/user/{userId} - Deve retornar reservas do utilizador")
     void shouldReturnBookingsByUser() throws Exception {
@@ -86,6 +91,7 @@ class BookChargeControllerTest {
         verify(bookChargeService).getBookingsByUser(1L);
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("PATCH /api/bookings/{id}/status - Deve atualizar status da reserva")
     void shouldUpdateBookingStatus() throws Exception {

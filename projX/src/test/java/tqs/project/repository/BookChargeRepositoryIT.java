@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import tqs.project.model.*;
 import tqs.project.model.enums.BookingStatus;
 
@@ -61,6 +63,7 @@ class BookChargeRepositoryIT {
         station = entityManager.persistAndFlush(station);
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("Deve encontrar reservas por utilizador")
     void shouldFindBookingsByUser() {
@@ -81,6 +84,7 @@ class BookChargeRepositoryIT {
         assertThat(found.get(0).getStatus()).isEqualTo(BookingStatus.RESERVED);
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("Deve encontrar reservas por carro e status")
     void shouldFindBookingsByCarAndStatus() {
@@ -100,6 +104,7 @@ class BookChargeRepositoryIT {
         assertThat(found.get(0).getCar().getPlate()).isEqualTo("AB-12-CD");
     }
 
+    @Requirement("TQSPROJECT-464")
     @Test
     @DisplayName("Deve encontrar reservas por período de tempo")
     void shouldFindBookingsByTimeRange() {

@@ -1,6 +1,9 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,6 +55,7 @@ class UserControllerTest {
         userDTO.setPassword("password123");
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("GET /api/users - Deve retornar todos os utilizadores")
     void shouldReturnAllUsers() throws Exception {
@@ -67,6 +71,7 @@ class UserControllerTest {
         verify(userService).getAllUsers();
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("POST /api/users - Deve criar utilizador com sucesso")
     void shouldCreateUserSuccessfully() throws Exception {
@@ -82,6 +87,7 @@ class UserControllerTest {
         verify(userService).createUser(any(UserDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("POST /api/users - Deve retornar erro quando criar utilizador falha")
     void shouldReturnErrorWhenCreateUserFails() throws Exception {
@@ -97,6 +103,7 @@ class UserControllerTest {
         verify(userService).createUser(any(UserDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("GET /api/users/{id} - Deve retornar utilizador por ID")
     void shouldReturnUserById() throws Exception {
@@ -110,6 +117,7 @@ class UserControllerTest {
         verify(userService).getUserById(1L);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("GET /api/users/{id} - Deve retornar 404 quando utilizador não existe")
     void shouldReturn404WhenUserNotFoundById() throws Exception {
@@ -121,6 +129,7 @@ class UserControllerTest {
         verify(userService).getUserById(999L);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PATCH /api/users/{id}/addFunds - Deve adicionar fundos com sucesso")
     void shouldAddFundsSuccessfully() throws Exception {
@@ -138,6 +147,7 @@ class UserControllerTest {
         verify(userService).addFunds(1L, 50.0);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PATCH /api/users/{id}/addFunds - Deve retornar erro quando falha com RuntimeException")
     void shouldReturnErrorWhenAddFundsFails() throws Exception {
@@ -152,6 +162,7 @@ class UserControllerTest {
         verify(userService).addFunds(1L, -10.0);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PATCH /api/users/{id}/addFunds - Deve retornar erro quando falha com IllegalArgumentException")
     void shouldReturnErrorWhenAddFundsFailsWithIllegalArgument() throws Exception {
@@ -166,6 +177,7 @@ class UserControllerTest {
         verify(userService).addFunds(1L, -10.0);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("GET /api/users/{id}/balance - Deve retornar saldo do utilizador")
     void shouldReturnUserBalance() throws Exception {
@@ -178,6 +190,7 @@ class UserControllerTest {
         verify(userService).getUserBalance(1L);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PUT /api/users/{id} - Deve atualizar utilizador")
     void shouldUpdateUser() throws Exception {
@@ -192,6 +205,7 @@ class UserControllerTest {
         verify(userService).updateUser(eq(1L), any(UserDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PUT /api/users/{id} - Deve retornar 404 quando utilizador não existe para atualizar")
     void shouldReturn404WhenUpdatingNonExistentUser() throws Exception {
@@ -206,6 +220,7 @@ class UserControllerTest {
         verify(userService).updateUser(eq(999L), any(UserDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("PUT /api/users/{id} - Deve retornar erro quando atualizar utilizador falha")
     void shouldReturnErrorWhenUpdateUserFails() throws Exception {
@@ -221,6 +236,7 @@ class UserControllerTest {
         verify(userService).updateUser(eq(1L), any(UserDTO.class));
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("DELETE /api/users/{id} - Deve eliminar utilizador com sucesso")
     void shouldDeleteUserSuccessfully() throws Exception {
@@ -232,6 +248,7 @@ class UserControllerTest {
         verify(userService).deleteUser(1L);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("DELETE /api/users/{id} - Deve retornar 404 quando utilizador não existe")
     void shouldReturn404WhenUserNotExists() throws Exception {
@@ -244,6 +261,7 @@ class UserControllerTest {
         verify(userService).deleteUser(999L);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("DELETE /api/users/{id} - Deve retornar erro quando eliminar utilizador falha")
     void shouldReturnErrorWhenDeleteUserFails() throws Exception {

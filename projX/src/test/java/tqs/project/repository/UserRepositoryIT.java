@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
 import tqs.project.model.User;
 
 import java.util.Optional;
@@ -20,6 +22,7 @@ class UserRepositoryIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve encontrar utilizador por email")
     void shouldFindUserByEmail() {
@@ -40,6 +43,7 @@ class UserRepositoryIT {
         assertThat(found.get().getBalance()).isEqualTo(100.0);
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve retornar empty quando email não existe")
     void shouldReturnEmptyWhenEmailNotExists() {
@@ -47,6 +51,7 @@ class UserRepositoryIT {
         assertThat(found).isEmpty();
     }
 
+    @Requirement("TQSPROJECT-1221")
     @Test
     @DisplayName("Deve salvar e encontrar utilizador por ID")
     void shouldSaveAndFindById() {
