@@ -1,6 +1,9 @@
 package tqs.project.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.getxray.xray.junit.customjunitxml.annotations.Requirement;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(StatisticsController.class)
-class StatisticsControllerTest {
+class StatisticsControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -55,6 +58,7 @@ class StatisticsControllerTest {
         );
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/reservations/rush-hour-stats - Deve retornar estatísticas de rush hour")
     void shouldReturnRushHourStats() throws Exception {
@@ -71,6 +75,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getRushHourStatistics();
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/reservations/weekly-trends - Deve retornar tendências semanais")
     void shouldReturnWeeklyTrends() throws Exception {
@@ -86,6 +91,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getWeeklyTrends();
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/payments/monthly-revenue - Deve retornar receita mensal")
     void shouldReturnMonthlyRevenue() throws Exception {
@@ -101,6 +107,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getMonthlyRevenue();
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/stations/{stationId}/monthly-revenue - Deve retornar receita mensal da estação")
     void shouldReturnStationMonthlyRevenue() throws Exception {
@@ -115,6 +122,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getMonthlyRevenueByStation(1L);
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/stations/{stationId}/rush-hour-stats - Deve retornar rush hour da estação")
     void shouldReturnStationRushHourStats() throws Exception {
@@ -129,6 +137,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getRushHourStatisticsByStation(1L);
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("GET /api/stations/{stationId}/weekly-trends - Deve retornar tendências semanais da estação")
     void shouldReturnStationWeeklyTrends() throws Exception {
@@ -143,6 +152,7 @@ class StatisticsControllerTest {
         verify(statisticsService).getWeeklyTrendsByStation(1L);
     }
 
+    @Requirement("TQSPROJECT-1220")
     @Test
     @DisplayName("POST /api/stations/monthly-revenue - Deve retornar receita de múltiplas estações")
     void shouldReturnMultipleStationsRevenue() throws Exception {
