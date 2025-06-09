@@ -379,7 +379,7 @@ main() {
 
 
 if !  docker ps > /dev/null 2>&1; then
-    echo " Erro: Docker não está a rodar ou não está acessível."
+    echo " Erro: docker não está a rodar ou não está acessível."
     echo " Executa: sudo systemctl start docker"
     exit 1
 fi

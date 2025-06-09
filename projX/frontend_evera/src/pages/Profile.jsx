@@ -4,7 +4,6 @@ import {
   Alert, Dialog, DialogTitle, DialogContent, DialogActions, Grid, IconButton
 } from '@mui/material';
 import { Edit, Delete } from '@mui/icons-material';
-import VehicleCard from '../components/VehicleCard';
 import { fetchCarsByUserId, addCar, deleteCar, updateCar } from '../services/api';
 
 export default function Profile() {
